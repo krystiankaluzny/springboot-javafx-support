@@ -10,6 +10,7 @@ public class StartConfiguration {
 	Class<? extends AbstractFxmlView> startView;
 	SplashScreen splashScreen = new SplashScreen();
 	boolean showErrorScreen = true;
+	boolean webEnvironment = true;
 
 	StartConfiguration setStartClass(Class<?> startClass) {
 		this.startClass = checkNotNull(startClass);
@@ -33,6 +34,11 @@ public class StartConfiguration {
 
 	public StartConfiguration setShowErrorScreen(boolean showErrorScreen) {
 		this.showErrorScreen = showErrorScreen;
+		return this;
+	}
+
+	public StartConfiguration setWebEnvironment(boolean webEnvironment) {
+		this.webEnvironment = webEnvironment;
 		return this;
 	}
 

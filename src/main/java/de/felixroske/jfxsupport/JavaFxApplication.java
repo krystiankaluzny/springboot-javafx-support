@@ -63,8 +63,10 @@ public class JavaFxApplication extends Application {
 
 	private void createApplicationContext() {
 		JavaFxSupportConfiguration.javaFxApplication = this;
-		applicationContext = SpringApplication.run(new Object[] { startConfiguration.startClass,
-				JavaFxSupportConfiguration.class }, startConfiguration.startArgs);
+		SpringApplication springApplication = new SpringApplication(startConfiguration.startClass,
+				JavaFxSupportConfiguration.class);
+		springApplication.setWebEnvironment(startConfiguration.webEnvironment);
+		applicationContext = springApplication.run(startConfiguration.startArgs);
 	}
 
 	private void tryToGetAbstractFxSupport() {
@@ -161,8 +163,8 @@ public class JavaFxApplication extends Application {
 	}
 
 	private void afterAppContextInitAndFxStart(Stage splashStage) {
-		tryToCallAbstractFxSupportStart();
 		showMainAndCloseSplash(splashStage);
+		tryToCallAbstractFxSupportStart();
 	}
 
 	private void tryToCallAbstractFxSupportStart() {

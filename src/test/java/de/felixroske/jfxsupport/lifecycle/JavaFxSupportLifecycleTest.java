@@ -6,14 +6,11 @@ import net.jodah.concurrentunit.Waiter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.concurrent.atomic.AtomicBoolean;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 
-import de.felixroske.jfxsupport.AbstractJavaFxApplicationSupport;
-import de.felixroske.jfxsupport.JavaFxSupport;
-import de.felixroske.jfxsupport.SplashScreen;
+import de.felixroske.jfxsupport.JavaFxApplication;
 import javafx.stage.Stage;
 
 /**
@@ -24,7 +21,7 @@ public class JavaFxSupportLifecycleTest {
 	@Test
 	public void noErrorLifecycleTest() throws Throwable {
 		//given/when
-		asyncStartApp(NoErrorLifecycleTestApp.class);
+		javaFxApplicationLauncher.launch(NoErrorLifecycleTestApp.class);
 
 		//then
 		waiter.await(TIMEOUT, 4);
@@ -71,7 +68,7 @@ public class JavaFxSupportLifecycleTest {
 	@Test
 	public void initErrorTest() throws Throwable {
 		//given/when
-		asyncStartApp(InitErrorTestApp.class);
+		javaFxApplicationLauncher.launch(InitErrorTestApp.class);
 
 		//then
 		waiter.await(TIMEOUT, 3);
@@ -104,6 +101,71 @@ public class JavaFxSupportLifecycleTest {
 			waiter.resume();
 		}
 	}
+
+	@Test
+	public void initAndStartErrorTest() throws Throwable {
+		//given/when
+		javaFxApplicationLauncher.launch(InitAndStartErrorTestApp.class);
+
+		//then
+		waiter.await(TIMEOUT, 3);
+	}
+
+	/**
+	 * Created by Krystian Kałużny on 03.07.2017.
+	 * Part of {@link #initAndStartErrorTest()}
+	 */
+	@LifecycleSpringBootApplication
+	static class InitAndStartErrorTestApp extends BaseFxSupportLifecycleApp {
+
+		@Override
+		protected void init() {
+			waiter.resume();
+			throw new RuntimeException("Init error");
+		}
+
+		@Override
+		protected void start(Stage stage) {
+			super.start(stage);
+			started = false;
+			waiter.assertFalse(inited);
+			waiter.resume();
+			throw new RuntimeException("Start error");
+		}
+
+		@Override
+		protected void stop() {
+			super.stop();
+			waiter.assertFalse(started);
+			waiter.resume();
+		}
+	}
+
+	@Test
+	public void javaFxApplicationInjectionTest() throws Throwable {
+		//given/when
+		javaFxApplicationLauncher.launch(JavaFxApplicationInjectionTestApp.class);
+
+		//then
+		waiter.await(TIMEOUT);
+	}
+
+	/**
+	 * Created by Krystian Kałużny on 03.07.2017.
+	 * Part of {@link #initAndStartErrorTest()}
+	 */
+	@LifecycleSpringBootApplication
+	static class JavaFxApplicationInjectionTestApp extends BaseFxSupportLifecycleApp {
+
+		@Autowired JavaFxApplication javaFxApplication;
+
+		@PostConstruct
+		private void constructed() {
+			waiter.assertNotNull(javaFxApplication);
+			waiter.resume();
+		}
+	}
+
 	//////////////////////////////////
 	/////// TESTS CONFIGURATION //////
 	//////////////////////////////////
@@ -111,27 +173,6 @@ public class JavaFxSupportLifecycleTest {
 	private static Waiter waiter; //it have to be static cause classes with @LifecycleSpringBootApplication have to be static either
 	private JavaFxApplicationLauncher javaFxApplicationLauncher;
 	private static long TIMEOUT = 5000;
-
-	private void asyncStartApp(Class<? extends AbstractJavaFxApplicationSupport> clazz) {
-		InactiveSpringBootAppExcludeFilter.activeSpringBootClass = clazz;
-		JavaFxSupport.getStartConfiguration()
-				.setStartClass(clazz)
-				.setStartView(LifecyclePlainView.class)
-				.setStartArgs(new String[0])
-				.setWebEnvironment(false)
-				.setSplashScreen(new SplashScreen() {
-					@Override
-					public boolean visible() {
-						return false;
-					}
-				});
-
-		try {
-			javaFxApplicationLauncher.launch(); //java fx init and launch
-		} catch (Exception e) {
-			waiter.fail(e);
-		}
-	}
 
 	@Before
 	public void setUp() throws Exception {
@@ -144,5 +185,6 @@ public class JavaFxSupportLifecycleTest {
 	public void tearDown() throws Exception {
 		waiter = null;
 		javaFxApplicationLauncher = null;
+		BaseFxSupportLifecycleApp.launcher = null;
 	}
 }

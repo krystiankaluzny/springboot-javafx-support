@@ -22,12 +22,11 @@ abstract class BaseFxSupportLifecycleApp extends AbstractJavaFxApplicationSuppor
 	protected void start(Stage stage) {
 		stage.hide();
 		started = true;
-		if (launcher != null) {
-			try {
-				launcher.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+
+		try {
+			launcher.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

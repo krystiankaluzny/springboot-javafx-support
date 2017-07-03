@@ -173,7 +173,7 @@ public class JavaFxApplication extends Application {
 					try {
 						fxSupport.start(stage);
 					} catch (Exception e) {
-						LOGGER.error("Exception in init method", e);
+						LOGGER.error("Exception in start method", e);
 					}
 				}
 		));

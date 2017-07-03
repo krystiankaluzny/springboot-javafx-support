@@ -1,4 +1,4 @@
-package de.felixroske.jfxsupport.lifecycle;
+package de.felixroske.jfxsupport.misc;
 
 import de.felixroske.jfxsupport.AbstractFxmlView;
 import de.felixroske.jfxsupport.FXMLView;
@@ -6,7 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.layout.Region;
 
 @FXMLView
-class LifecyclePlainView extends AbstractFxmlView {
+class FxPlainView extends AbstractFxmlView {
 
 	@Override
 	public Parent getView() {

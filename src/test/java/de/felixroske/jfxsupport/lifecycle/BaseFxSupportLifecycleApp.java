@@ -1,6 +1,7 @@
 package de.felixroske.jfxsupport.lifecycle;
 
 import de.felixroske.jfxsupport.AbstractJavaFxApplicationSupport;
+import de.felixroske.jfxsupport.misc.JavaFxApplicationLauncher;
 import javafx.stage.Stage;
 
 /**

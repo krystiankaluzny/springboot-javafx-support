@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 
 import de.felixroske.jfxsupport.JavaFxApplication;
+import de.felixroske.jfxsupport.misc.FxSpringBootApplication;
+import de.felixroske.jfxsupport.misc.JavaFxApplicationLauncher;
 import javafx.stage.Stage;
 
 /**
@@ -32,7 +34,7 @@ public class JavaFxSupportLifecycleTest {
 	 * Part of {@link #noErrorLifecycleTest()}
 	 */
 
-	@LifecycleSpringBootApplication
+	@FxSpringBootApplication
 	static class NoErrorLifecycleTestApp extends BaseFxSupportLifecycleApp {
 
 		private boolean constructed = false;
@@ -78,7 +80,7 @@ public class JavaFxSupportLifecycleTest {
 	 * Created by Krystian Kałużny on 03.07.2017.
 	 * Part of {@link #initErrorTest()}
 	 */
-	@LifecycleSpringBootApplication
+	@FxSpringBootApplication
 	static class InitErrorTestApp extends BaseFxSupportLifecycleApp {
 
 		@Override
@@ -115,7 +117,7 @@ public class JavaFxSupportLifecycleTest {
 	 * Created by Krystian Kałużny on 03.07.2017.
 	 * Part of {@link #initAndStartErrorTest()}
 	 */
-	@LifecycleSpringBootApplication
+	@FxSpringBootApplication
 	static class InitAndStartErrorTestApp extends BaseFxSupportLifecycleApp {
 
 		@Override
@@ -147,14 +149,14 @@ public class JavaFxSupportLifecycleTest {
 		javaFxApplicationLauncher.launch(JavaFxApplicationInjectionTestApp.class);
 
 		//then
-		waiter.await(TIMEOUT);
+		waiter.await(TIMEOUT, 2);
 	}
 
 	/**
 	 * Created by Krystian Kałużny on 03.07.2017.
 	 * Part of {@link #initAndStartErrorTest()}
 	 */
-	@LifecycleSpringBootApplication
+	@FxSpringBootApplication
 	static class JavaFxApplicationInjectionTestApp extends BaseFxSupportLifecycleApp {
 
 		@Autowired JavaFxApplication javaFxApplication;
@@ -164,13 +166,19 @@ public class JavaFxSupportLifecycleTest {
 			waiter.assertNotNull(javaFxApplication);
 			waiter.resume();
 		}
+
+		@Override
+		protected void stop() {
+			super.stop();
+			waiter.resume();
+		}
 	}
 
 	//////////////////////////////////
 	/////// TESTS CONFIGURATION //////
 	//////////////////////////////////
 
-	private static Waiter waiter; //it have to be static cause classes with @LifecycleSpringBootApplication have to be static either
+	private static Waiter waiter; //it have to be static cause classes with @FxSpringBootApplication have to be static either
 	private JavaFxApplicationLauncher javaFxApplicationLauncher;
 	private static long TIMEOUT = 5000;
 

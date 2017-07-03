@@ -1,4 +1,4 @@
-package de.felixroske.jfxsupport.lifecycle;
+package de.felixroske.jfxsupport.misc;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.type.AnnotationMetadata;

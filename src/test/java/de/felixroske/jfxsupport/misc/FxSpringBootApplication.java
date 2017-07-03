@@ -1,4 +1,4 @@
-package de.felixroske.jfxsupport.lifecycle;
+package de.felixroske.jfxsupport.misc;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,6 +19,7 @@ import de.felixroske.jfxsupport.FXMLView;
 @SpringBootApplication
 @ComponentScan(useDefaultFilters = false,
 		includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = FXMLView.class),
-		excludeFilters = @ComponentScan.Filter(type = FilterType.CUSTOM, classes = InactiveSpringBootAppExcludeFilter.class))
-@interface LifecycleSpringBootApplication {
+		excludeFilters = @ComponentScan.Filter(type = FilterType.CUSTOM, classes = InactiveSpringBootAppExcludeFilter.class),
+		basePackages = { "de.felixroske.jfxsupport.misc" })
+public @interface FxSpringBootApplication {
 }

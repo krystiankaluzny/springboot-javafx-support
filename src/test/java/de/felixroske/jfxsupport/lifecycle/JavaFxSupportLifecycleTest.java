@@ -175,7 +175,7 @@ public class JavaFxSupportLifecycleTest {
 
 	/**
 	 * Created by Krystian Kałużny on 03.07.2017.
-	 * Part of {@link #initAndStartErrorTest()}
+	 * Part of {@link #initStartAndStoppedErrorTest()}
 	 */
 	@FxSpringBootApplication
 	static class InitStartAndStopErrorTestApp extends InitAndStartErrorTestApp {
@@ -208,7 +208,7 @@ public class JavaFxSupportLifecycleTest {
 
 	/**
 	 * Created by Krystian Kałużny on 03.07.2017.
-	 * Part of {@link #initAndStartErrorTest()}
+	 * Part of {@link #javaFxApplicationInjectionTest()}
 	 */
 	@FxSpringBootApplication
 	static class JavaFxApplicationInjectionTestApp extends BaseFxSupportLifecycleApp {
@@ -223,7 +223,8 @@ public class JavaFxSupportLifecycleTest {
 
 		@Override
 		protected void onClose() {
-			super.onClose();
+			closed();
+			waiter.assertNotNull(javaFxApplication);
 			waiter.resume();
 		}
 	}

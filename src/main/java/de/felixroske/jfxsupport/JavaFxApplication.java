@@ -3,9 +3,8 @@ package de.felixroske.jfxsupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
 import java.util.ArrayList;
@@ -62,10 +61,9 @@ public class JavaFxApplication extends Application {
 	}
 
 	private void createApplicationContext() {
-		JavaFxSupportConfiguration.javaFxApplication = this;
-		SpringApplication springApplication = new SpringApplication(startConfiguration.startClass,
-				JavaFxSupportConfiguration.class);
+		SpringApplication springApplication = new SpringApplication(startConfiguration.startClass);
 		springApplication.setWebEnvironment(startConfiguration.webEnvironment);
+		springApplication.addInitializers(new JavaFxApplicationInitializer(this));
 		applicationContext = springApplication.run(startConfiguration.startArgs);
 	}
 
@@ -293,14 +291,17 @@ public class JavaFxApplication extends Application {
 	 * <p>
 	 * Using static field allows to create Spring Bean from Java FX Application instance.
 	 */
-	@Configuration
-	static class JavaFxSupportConfiguration {
+	static class JavaFxApplicationInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-		static JavaFxApplication javaFxApplication;
+		final JavaFxApplication javaFxApplication;
 
-		@Bean
-		JavaFxApplication javaFxApplication() {
-			return javaFxApplication;
+		JavaFxApplicationInitializer(JavaFxApplication javaFxApplication) {
+			this.javaFxApplication = javaFxApplication;
+		}
+
+		@Override
+		public void initialize(ConfigurableApplicationContext applicationContext) {
+			applicationContext.getBeanFactory().registerSingleton(JavaFxApplication.class.getSimpleName(), javaFxApplication);
 		}
 	}
 }

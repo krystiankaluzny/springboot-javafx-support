@@ -60,23 +60,31 @@ public abstract class AbstractJavaFxApplicationSupport {
 	}
 
 	/**
-	 * Call after Java Fx init and creation spring application context.
+	 * Call after Java Fx onInit and creation spring application context.
 	 * Called on worker thread.
 	 */
-	protected void init() {
+	protected void onInit() {
 	}
 
 	/**
-	 * Call after Java Fx start and full fx support initialization.
+	 * Call after Java Fx onStart and full fx support initialization.
 	 * Called on FX thread.
 	 */
-	protected void start(Stage stage) {
+	protected void onStart(Stage stage) {
 	}
 
 	/**
-	 * Call in Java Fx stop. After that spring application context is closed.
+	 * Call in Java Fx stop. After that spring application context is onClose.
 	 * @see Application#stop()
 	 */
-	protected void stop() {
+	protected void onStop() {
+	}
+
+	/**
+	 * Call in Java Fx stop after spring application context close.
+	 * @see Application#stop()
+	 */
+	protected void onClose() {
+
 	}
 }

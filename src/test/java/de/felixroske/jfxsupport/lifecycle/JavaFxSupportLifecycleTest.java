@@ -26,7 +26,7 @@ public class JavaFxSupportLifecycleTest {
 		javaFxApplicationLauncher.launch(NoErrorLifecycleTestApp.class);
 
 		//then
-		waiter.await(TIMEOUT, 4);
+		waiter.await(TIMEOUT, 5);
 	}
 
 	/**
@@ -41,28 +41,37 @@ public class JavaFxSupportLifecycleTest {
 
 		@PostConstruct
 		private void constructed() {
-			constructed = true;
 			waiter.resume();
+			constructed = true;
 		}
 
 		@Override
-		protected void init() {
-			super.init();
+		protected void onInit() {
 			waiter.assertTrue(constructed);
 			waiter.resume();
+			inited();
 		}
 
 		@Override
-		protected void start(Stage stage) {
-			super.start(stage);
+		protected void onStart(Stage stage) {
 			waiter.assertTrue(inited);
 			waiter.resume();
+			started(stage);
 		}
 
 		@Override
-		protected void stop() {
-			super.stop();
+		protected void onStop() {
 			waiter.assertTrue(started);
+			waiter.resume();
+			stopped();
+		}
+
+		@Override
+		protected void onClose() {
+			System.out.println(toString());
+			waiter.assertTrue(stopped);
+			closed();
+
 			waiter.resume();
 		}
 	}
@@ -73,7 +82,7 @@ public class JavaFxSupportLifecycleTest {
 		javaFxApplicationLauncher.launch(InitErrorTestApp.class);
 
 		//then
-		waiter.await(TIMEOUT, 3);
+		waiter.await(TIMEOUT, 4);
 	}
 
 	/**
@@ -84,22 +93,32 @@ public class JavaFxSupportLifecycleTest {
 	static class InitErrorTestApp extends BaseFxSupportLifecycleApp {
 
 		@Override
-		protected void init() {
+		protected void onInit() {
 			waiter.resume();
-			throw new RuntimeException("Init error");
+			exception("Init error");
+			inited();
 		}
 
 		@Override
-		protected void start(Stage stage) {
-			super.start(stage);
+		protected void onStart(Stage stage) {
 			waiter.assertFalse(inited);
 			waiter.resume();
+			started(stage);
 		}
 
 		@Override
-		protected void stop() {
-			super.stop();
+		protected void onStop() {
 			waiter.assertTrue(started);
+			waiter.resume();
+			stopped();
+		}
+
+		@Override
+		protected void onClose() {
+			System.out.println(toString());
+			waiter.assertTrue(stopped);
+			closed();
+
 			waiter.resume();
 		}
 	}
@@ -110,7 +129,7 @@ public class JavaFxSupportLifecycleTest {
 		javaFxApplicationLauncher.launch(InitAndStartErrorTestApp.class);
 
 		//then
-		waiter.await(TIMEOUT, 3);
+		waiter.await(TIMEOUT, 4);
 	}
 
 	/**
@@ -118,27 +137,62 @@ public class JavaFxSupportLifecycleTest {
 	 * Part of {@link #initAndStartErrorTest()}
 	 */
 	@FxSpringBootApplication
-	static class InitAndStartErrorTestApp extends BaseFxSupportLifecycleApp {
+	static class InitAndStartErrorTestApp extends InitErrorTestApp {
 
 		@Override
-		protected void init() {
-			waiter.resume();
-			throw new RuntimeException("Init error");
-		}
-
-		@Override
-		protected void start(Stage stage) {
-			super.start(stage);
-			started = false;
+		protected void onStart(Stage stage) {
 			waiter.assertFalse(inited);
 			waiter.resume();
-			throw new RuntimeException("Start error");
+			closeAfterHide(stage);
+			exception("Start error");
+			started();
 		}
 
 		@Override
-		protected void stop() {
-			super.stop();
+		protected void onStop() {
 			waiter.assertFalse(started);
+			waiter.resume();
+			stopped();
+		}
+
+		@Override
+		protected void onClose() {
+			waiter.assertTrue(stopped);
+			closed();
+
+			waiter.resume();
+		}
+	}
+
+	@Test
+	public void initStartAndStoppedErrorTest() throws Throwable {
+		//given/when
+		javaFxApplicationLauncher.launch(InitStartAndStopErrorTestApp.class);
+
+		//then
+		waiter.await(TIMEOUT, 4);
+	}
+
+	/**
+	 * Created by Krystian Kałużny on 03.07.2017.
+	 * Part of {@link #initAndStartErrorTest()}
+	 */
+	@FxSpringBootApplication
+	static class InitStartAndStopErrorTestApp extends InitAndStartErrorTestApp {
+
+		@Override
+		protected void onStop() {
+			waiter.assertFalse(started);
+			waiter.resume();
+			exception("Stop error");
+			stopped();
+		}
+
+		@Override
+		protected void onClose() {
+			waiter.assertFalse(stopped);
+			closed();
+
 			waiter.resume();
 		}
 	}
@@ -168,8 +222,8 @@ public class JavaFxSupportLifecycleTest {
 		}
 
 		@Override
-		protected void stop() {
-			super.stop();
+		protected void onClose() {
+			super.onClose();
 			waiter.resume();
 		}
 	}

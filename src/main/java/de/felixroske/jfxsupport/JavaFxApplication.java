@@ -51,7 +51,7 @@ public class JavaFxApplication extends Application {
 	public void init() throws Exception {
 		CompletableFuture.runAsync(this::createApplicationContext)
 				.thenRun(this::tryToGetAbstractFxSupport)
-				.thenRun(this::tryToCallAbstractFxSupportInit)
+				.thenRun(this::tryToCallAbstractFxSupportOnInit)
 				.thenRun(this::populateApplicationInstance)
 				.thenRun(this::loadApplicationIcons)
 				.thenRun(this::initApplicationFinished)
@@ -85,11 +85,11 @@ public class JavaFxApplication extends Application {
 		}
 	}
 
-	private void tryToCallAbstractFxSupportInit() {
+	private void tryToCallAbstractFxSupportOnInit() {
 		try {
-			abstractJavaFxApplicationSupport.ifPresent(AbstractJavaFxApplicationSupport::init);
+			abstractJavaFxApplicationSupport.ifPresent(AbstractJavaFxApplicationSupport::onInit);
 		} catch (Exception e) {
-			LOGGER.error("Exception in init method", e);
+			LOGGER.error("Exception in onInit method", e);
 		}
 	}
 
@@ -116,7 +116,7 @@ public class JavaFxApplication extends Application {
 	}
 
 	private void handleAppInitError(Throwable throwable) {
-		LOGGER.error("Failed to init application: ", throwable);
+		LOGGER.error("Failed to initialize application: ", throwable);
 		Platform.runLater(() -> showErrorAlert(throwable));
 	}
 
@@ -165,15 +165,15 @@ public class JavaFxApplication extends Application {
 
 	private void afterAppContextInitAndFxStart(Stage splashStage) {
 		showMainAndCloseSplash(splashStage);
-		tryToCallAbstractFxSupportStart();
+		tryToCallAbstractFxSupportOnStart();
 	}
 
-	private void tryToCallAbstractFxSupportStart() {
+	private void tryToCallAbstractFxSupportOnStart() {
 		abstractJavaFxApplicationSupport.ifPresent(fxSupport -> Platform.runLater(() -> {
 					try {
-						fxSupport.start(stage);
+						fxSupport.onStart(stage);
 					} catch (Exception e) {
-						LOGGER.error("Exception in start method", e);
+						LOGGER.error("Exception in onStart method", e);
 					}
 				}
 		));
@@ -257,17 +257,26 @@ public class JavaFxApplication extends Application {
 	 */
 	@Override
 	public void stop() throws Exception {
-		tryToCallAbstractFxSupportStop();
+		tryToCallAbstractFxSupportOnStop();
 		if (applicationContext != null) {
 			applicationContext.close();
 		} // else: someone did it already
+		tryToCallAbstractFxSupportOnClose();
 	}
 
-	private void tryToCallAbstractFxSupportStop() {
+	private void tryToCallAbstractFxSupportOnStop() {
 		try {
-			abstractJavaFxApplicationSupport.ifPresent(AbstractJavaFxApplicationSupport::stop);
+			abstractJavaFxApplicationSupport.ifPresent(AbstractJavaFxApplicationSupport::onStop);
 		} catch (Exception e) {
-			LOGGER.error("Exception in stop method", e);
+			LOGGER.error("Exception in onStop method", e);
+		}
+	}
+
+	private void tryToCallAbstractFxSupportOnClose() {
+		try {
+			abstractJavaFxApplicationSupport.ifPresent(AbstractJavaFxApplicationSupport::onClose);
+		} catch (Exception e) {
+			LOGGER.error("Exception in onStop method", e);
 		}
 	}
 

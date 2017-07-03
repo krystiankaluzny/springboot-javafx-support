@@ -17,7 +17,7 @@ import static org.hamcrest.CoreMatchers.isA;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = AnnotatedView.class)
 public class AnnotatedViewTest extends GuiTest {
 
 	@Autowired

@@ -108,10 +108,9 @@ public class JavaFxSupportLifecycleTest {
 	/////// TESTS CONFIGURATION //////
 	//////////////////////////////////
 
-	private static Waiter waiter;
+	private static Waiter waiter; //it have to be static cause classes with @LifecycleSpringBootApplication have to be static either
 	private JavaFxApplicationLauncher javaFxApplicationLauncher;
-	private static long TIMEOUT = 50000;
-	private static final AtomicBoolean lock = new AtomicBoolean(false);
+	private static long TIMEOUT = 5000;
 
 	private void asyncStartApp(Class<? extends AbstractJavaFxApplicationSupport> clazz) {
 		InactiveSpringBootAppExcludeFilter.activeSpringBootClass = clazz;

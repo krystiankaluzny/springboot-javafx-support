@@ -1,13 +1,13 @@
 package de.felixroske.jfxsupport.lifecycle;
 
+
 import net.jodah.concurrentunit.Waiter;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.PostConstruct;
 
@@ -34,7 +34,8 @@ public class JavaFxSupportLifecycleTest {
 	 * Created by Krystian Kałużny on 03.07.2017.
 	 * Part of {@link #noErrorLifecycleTest()}
 	 */
-	@SpringBootApplication
+
+	@LifecycleSpringBootApplication
 	static class NoErrorLifecycleTestApp extends BaseFxSupportLifecycleApp {
 
 		private boolean constructed = false;
@@ -67,37 +68,82 @@ public class JavaFxSupportLifecycleTest {
 		}
 	}
 
+	@Test
+	public void initErrorTest() throws Throwable {
+		//given/when
+		asyncStartApp(InitErrorTestApp.class);
+
+		//then
+		waiter.await(TIMEOUT, 3);
+	}
+
+	/**
+	 * Created by Krystian Kałużny on 03.07.2017.
+	 * Part of {@link #initErrorTest()}
+	 */
+	@LifecycleSpringBootApplication
+	static class InitErrorTestApp extends BaseFxSupportLifecycleApp {
+
+		@Override
+		protected void init() {
+			waiter.resume();
+			throw new RuntimeException("Init error");
+		}
+
+		@Override
+		protected void start(Stage stage) {
+			super.start(stage);
+			waiter.assertFalse(inited);
+			waiter.resume();
+		}
+
+		@Override
+		protected void stop() {
+			super.stop();
+			waiter.assertTrue(started);
+			waiter.resume();
+		}
+	}
 	//////////////////////////////////
 	/////// TESTS CONFIGURATION //////
 	//////////////////////////////////
 
 	private static Waiter waiter;
-	private static long TIMEOUT = 5000;
+	private JavaFxApplicationLauncher javaFxApplicationLauncher;
+	private static long TIMEOUT = 50000;
+	private static final AtomicBoolean lock = new AtomicBoolean(false);
 
 	private void asyncStartApp(Class<? extends AbstractJavaFxApplicationSupport> clazz) {
-		CompletableFuture.runAsync(() -> {
-			JavaFxSupport.getStartConfiguration()
-					.setWebEnvironment(false)
-					.setSplashScreen(new SplashScreen() {
-						@Override
-						public boolean visible() {
-							return false;
-						}
-					});
+		InactiveSpringBootAppExcludeFilter.activeSpringBootClass = clazz;
+		JavaFxSupport.getStartConfiguration()
+				.setStartClass(clazz)
+				.setStartView(LifecyclePlainView.class)
+				.setStartArgs(new String[0])
+				.setWebEnvironment(false)
+				.setSplashScreen(new SplashScreen() {
+					@Override
+					public boolean visible() {
+						return false;
+					}
+				});
 
-			//launchApp is blocking so it have to be call in different thread
-			JavaFxSupport.launchApp(clazz, LifecyclePlainView.class, new String[] {});
-		});
+		try {
+			javaFxApplicationLauncher.launch(); //java fx init and launch
+		} catch (Exception e) {
+			waiter.fail(e);
+		}
 	}
+
 	@Before
 	public void setUp() throws Exception {
-		if (waiter == null) {
-			waiter = new Waiter();
-		}
+		waiter = new Waiter();
+		javaFxApplicationLauncher = new JavaFxApplicationLauncher();
+		BaseFxSupportLifecycleApp.launcher = javaFxApplicationLauncher;
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		waiter = null;
+		javaFxApplicationLauncher = null;
 	}
 }

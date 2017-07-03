@@ -12,17 +12,17 @@ public class StartConfiguration {
 	boolean showErrorScreen = true;
 	boolean webEnvironment = true;
 
-	StartConfiguration setStartClass(Class<?> startClass) {
+	public StartConfiguration setStartClass(Class<?> startClass) {
 		this.startClass = checkNotNull(startClass);
 		return this;
 	}
 
-	StartConfiguration setStartArgs(String[] startArgs) {
+	public StartConfiguration setStartArgs(String[] startArgs) {
 		this.startArgs = checkNotNull(startArgs);
 		return this;
 	}
 
-	StartConfiguration setStartView(Class<? extends AbstractFxmlView> startView) {
+	public StartConfiguration setStartView(Class<? extends AbstractFxmlView> startView) {
 		this.startView = checkNotNull(startView);
 		return this;
 	}

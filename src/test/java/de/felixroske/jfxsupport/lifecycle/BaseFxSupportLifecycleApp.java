@@ -6,10 +6,12 @@ import javafx.stage.Stage;
 /**
  * Created by Krystian Kałużny on 03.07.2017.
  */
-class BaseFxSupportLifecycleApp extends AbstractJavaFxApplicationSupport {
+abstract class BaseFxSupportLifecycleApp extends AbstractJavaFxApplicationSupport {
 	boolean inited = false;
 	boolean started = false;
 	boolean stopped = false;
+
+	static JavaFxApplicationLauncher launcher;
 
 	@Override
 	protected void init() {
@@ -20,6 +22,13 @@ class BaseFxSupportLifecycleApp extends AbstractJavaFxApplicationSupport {
 	protected void start(Stage stage) {
 		stage.hide();
 		started = true;
+		if (launcher != null) {
+			try {
+				launcher.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override

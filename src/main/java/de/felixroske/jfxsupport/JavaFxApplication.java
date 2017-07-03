@@ -71,7 +71,8 @@ public class JavaFxApplication extends Application {
 
 	private void tryToGetAbstractFxSupport() {
 		if (AbstractJavaFxApplicationSupport.class.isAssignableFrom(startConfiguration.startClass)) {
-			int beansCount = applicationContext.getBeanNamesForType(AbstractJavaFxApplicationSupport.class).length;
+			String[] beanNames = applicationContext.getBeanNamesForType(AbstractJavaFxApplicationSupport.class);
+			int beansCount = beanNames.length;
 			if (beansCount == 1) {
 				try {
 					abstractJavaFxApplicationSupport = Optional.ofNullable(applicationContext.getBean(AbstractJavaFxApplicationSupport.class));
@@ -79,7 +80,7 @@ public class JavaFxApplication extends Application {
 					LOGGER.error("Can't obtain AbstractJavaFxApplicationSupport instance", e);
 				}
 			} else if (beansCount > 1) {
-				LOGGER.error("To many AbstractJavaFxApplicationSupport beans, count: {}", beansCount);
+				LOGGER.error("To many AbstractJavaFxApplicationSupport beans, count: {}, beans: {}", beansCount, beanNames);
 			}
 		}
 	}
@@ -193,12 +194,11 @@ public class JavaFxApplication extends Application {
 	 */
 	private void showInitialView() {
 		final String stageStyle = applicationContext.getEnvironment().getProperty("javafx.stage.style");
-		if (stageStyle != null) {
-			stage.initStyle(StageStyle.valueOf(stageStyle.toUpperCase()));
-		} else {
-			stage.initStyle(StageStyle.DECORATED);
-		}
+		StageStyle style = stageStyle != null ? StageStyle.valueOf(stageStyle.toUpperCase()) : StageStyle.DECORATED;
 
+		if (!stage.isShowing() && !stage.getStyle().equals(style)) {
+			stage.initStyle(style);
+		}
 		showViewOrError(startConfiguration.startView);
 	}
 

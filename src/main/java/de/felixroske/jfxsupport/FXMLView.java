@@ -1,9 +1,9 @@
 package de.felixroske.jfxsupport;
 
+import org.springframework.stereotype.Component;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-
-import org.springframework.stereotype.Component;
 
 /**
  * The annotation {@link FXMLView} indicates a class to be used in the context

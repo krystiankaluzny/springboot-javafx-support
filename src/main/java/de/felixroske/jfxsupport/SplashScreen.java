@@ -14,7 +14,9 @@ import javafx.scene.layout.VBox;
  */
 public class SplashScreen {
 
-	/** The path to the default imager absolute to classpath root. */
+	/**
+	 * The path to the default imager absolute to classpath root.
+	 */
 	private static String DEFAULT_IMAGE = "/splash/javafx.png";
 
 	/**
@@ -50,5 +52,4 @@ public class SplashScreen {
 	public String getImagePath() {
 		return DEFAULT_IMAGE;
 	}
-
 }

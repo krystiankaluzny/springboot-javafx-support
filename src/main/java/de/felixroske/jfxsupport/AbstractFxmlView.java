@@ -1,6 +1,11 @@
 package de.felixroske.jfxsupport;
 
-import static java.util.ResourceBundle.getBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -9,13 +14,6 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.util.StringUtils;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -27,9 +25,11 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
 
+import static java.util.ResourceBundle.getBundle;
+
 /**
  * Base class for fxml-based view classes.
- * 
+ * <p>
  * It is derived from Adam Bien's
  * <a href="http://afterburner.adam-bien.com/">afterburner.fx</a> project.
  * <p>
@@ -44,7 +44,6 @@ import javafx.scene.layout.AnchorPane;
  * @author Thomas Darimont
  * @author Felix Roske
  * @author Andreas Jay
- *
  */
 public abstract class AbstractFxmlView implements ApplicationContextAware {
 
@@ -82,8 +81,7 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 	 * Gets the URL resource. This will be derived from applied annotation value
 	 * or from naming convention.
 	 *
-	 * @param annotation
-	 *            the annotation as defined by inheriting class.
+	 * @param annotation the annotation as defined by inheriting class.
 	 * @return the URL resource
 	 */
 	private URL getURLResource(final FXMLView annotation) {
@@ -108,8 +106,7 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 	/**
 	 * Creates the controller for type.
 	 *
-	 * @param type
-	 *            the type
+	 * @param type the type
 	 * @return the object
 	 */
 	private Object createControllerForType(final Class<?> type) {
@@ -136,8 +133,7 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 	/**
 	 * Sets the fxml root path.
 	 *
-	 * @param path
-	 *            the new fxml root path
+	 * @param path the new fxml root path
 	 */
 	private void setFxmlRootPath(final String path) {
 		if (path.endsWith("/")) {
@@ -150,13 +146,10 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 	/**
 	 * Load synchronously.
 	 *
-	 * @param resource
-	 *            the resource
-	 * @param bundle
-	 *            the bundle
+	 * @param resource the resource
+	 * @param bundle   the bundle
 	 * @return the FXML loader
-	 * @throws IllegalStateException
-	 *             the illegal state exception
+	 * @throws IllegalStateException the illegal state exception
 	 */
 	private FXMLLoader loadSynchronously(final URL resource, final ResourceBundle bundle) throws IllegalStateException {
 
@@ -204,9 +197,8 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 	 * Initializes the view synchronously and invokes the consumer with the
 	 * created parent Node within the FX UI thread.
 	 *
-	 * @param consumer
-	 *            - an object interested in received the {@link Parent} as
-	 *            callback
+	 * @param consumer - an object interested in received the {@link Parent} as
+	 *                 callback
 	 */
 	public void getView(final Consumer<Parent> consumer) {
 		CompletableFuture.supplyAsync(this::getView, Platform::runLater).thenAccept(consumer);
@@ -218,7 +210,7 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 	 * the access to its first child.
 	 *
 	 * @return the first child of the {@link AnchorPane} or null if there are no
-	 *         children available from this view.
+	 * children available from this view.
 	 */
 	public Node getViewWithoutRootContainer() {
 
@@ -233,8 +225,7 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 	/**
 	 * Adds the CSS if available.
 	 *
-	 * @param parent
-	 *            the parent
+	 * @param parent the parent
 	 */
 	void addCSSIfAvailable(final Parent parent) {
 
@@ -258,10 +249,8 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 	/**
 	 * Adds the CSS from annotation to parent.
 	 *
-	 * @param parent
-	 *            the parent
-	 * @param annotation
-	 *            the annotation
+	 * @param parent     the parent
+	 * @param annotation the annotation
 	 */
 	private void addCSSFromAnnotation(final Parent parent, final FXMLView annotation) {
 		if (annotation != null && annotation.css().length > 0) {
@@ -294,7 +283,7 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 	 * returned.
 	 *
 	 * @return the corresponding controller / presenter (usually for a
-	 *         AirhacksView the AirhacksPresenter)
+	 * AirhacksView the AirhacksPresenter)
 	 */
 	public Object getPresenter() {
 
@@ -308,8 +297,7 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 	 * the the view is going to be created / the method FXMLView#getView or
 	 * FXMLView#getViewAsync invoked.
 	 *
-	 * @param presenterConsumer
-	 *            listener for the presenter construction
+	 * @param presenterConsumer listener for the presenter construction
 	 */
 	public void getPresenter(final Consumer<Object> presenterConsumer) {
 
@@ -322,8 +310,7 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 	/**
 	 * Gets the conventional name.
 	 *
-	 * @param ending
-	 *            the suffix to append
+	 * @param ending the suffix to append
 	 * @return the conventional name with stripped ending
 	 */
 	private String getConventionalName(final String ending) {
@@ -334,7 +321,7 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 	 * Gets the conventional name.
 	 *
 	 * @return the name of the view without the "View" prefix in lowerCase. For
-	 *         AirhacksView just airhacks is going to be returned.
+	 * AirhacksView just airhacks is going to be returned.
 	 */
 	private String getConventionalName() {
 		return stripEnding(getClass().getSimpleName().toLowerCase());
@@ -360,8 +347,7 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 	/**
 	 * Strip ending.
 	 *
-	 * @param clazz
-	 *            the clazz
+	 * @param clazz the clazz
 	 * @return the string
 	 */
 	private static String stripEnding(final String clazz) {
@@ -377,8 +363,8 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 	 * Gets the fxml file path.
 	 *
 	 * @return the relative path to the fxml file derived from the FXML view.
-	 *         e.g. The name for the AirhacksView is going to be
-	 *         <PATH>/airhacks.fxml.
+	 * e.g. The name for the AirhacksView is going to be
+	 * <PATH>/airhacks.fxml.
 	 */
 
 	final String getFxmlPath() {
@@ -390,8 +376,7 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 	/**
 	 * Gets the resource bundle or returns null.
 	 *
-	 * @param name
-	 *            the name of the resource bundle.
+	 * @param name the name of the resource bundle.
 	 * @return the resource bundle
 	 */
 	private ResourceBundle getResourceBundle(final String name) {

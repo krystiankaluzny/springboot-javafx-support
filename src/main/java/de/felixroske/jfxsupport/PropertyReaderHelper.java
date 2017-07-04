@@ -1,10 +1,10 @@
 package de.felixroske.jfxsupport;
 
+import org.springframework.core.env.Environment;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-
-import org.springframework.core.env.Environment;
 
 /**
  * The utility PropertyReaderHelper.
@@ -12,7 +12,7 @@ import org.springframework.core.env.Environment;
  * @author Felix Roske
  * @author Andreas Jay
  */
-public class PropertyReaderHelper {
+class PropertyReaderHelper {
 
 	private PropertyReaderHelper() {
 	}
@@ -20,10 +20,8 @@ public class PropertyReaderHelper {
 	/**
 	 * Lookup in {@link Environment} a certain property or a list of properties.
 	 *
-	 * @param env
-	 *            the {@link Environment} context from which to
-	 * @param propName
-	 *            the name of the property to lookup from {@link Environment}.
+	 * @param env      the {@link Environment} context from which to
+	 * @param propName the name of the property to lookup from {@link Environment}.
 	 * @return the list
 	 */
 	public static List<String> get(final Environment env, final String propName) {
@@ -50,19 +48,14 @@ public class PropertyReaderHelper {
 	 * Load from {@link Environment} a key with a given type. If sucj key is
 	 * present supply it in {@link Consumer}.
 	 *
-	 * @param <T>
-	 *            the generic type
-	 * @param env
-	 *            the env
-	 * @param key
-	 *            the key
-	 * @param type
-	 *            the type
-	 * @param function
-	 *            the function
+	 * @param <T>      the generic type
+	 * @param env      the env
+	 * @param key      the key
+	 * @param type     the type
+	 * @param function the function
 	 */
 	public static <T> void setIfPresent(final Environment env, final String key, final Class<T> type,
-			final Consumer<T> function) {
+	                                    final Consumer<T> function) {
 		final T value = env.getProperty(key, type);
 		if (value != null) {
 			function.accept(value);

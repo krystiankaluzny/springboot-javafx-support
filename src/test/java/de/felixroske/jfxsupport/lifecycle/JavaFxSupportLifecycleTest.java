@@ -1,8 +1,6 @@
 package de.felixroske.jfxsupport.lifecycle;
 
 
-import net.jodah.concurrentunit.Waiter;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,14 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 
 import de.felixroske.jfxsupport.JavaFxApplication;
+import de.felixroske.jfxsupport.misc.BaseJavaFxSupportTest;
 import de.felixroske.jfxsupport.misc.FxSpringBootApplication;
-import de.felixroske.jfxsupport.misc.JavaFxApplicationLauncher;
 import javafx.stage.Stage;
 
 /**
  * Created by Krystian Kałużny on 03.07.2017.
  */
-public class JavaFxSupportLifecycleTest {
+public class JavaFxSupportLifecycleTest extends BaseJavaFxSupportTest {
 
 	@Test
 	public void noErrorLifecycleTest() throws Throwable {
@@ -233,21 +231,17 @@ public class JavaFxSupportLifecycleTest {
 	/////// TESTS CONFIGURATION //////
 	//////////////////////////////////
 
-	private static Waiter waiter; //it have to be static cause classes with @FxSpringBootApplication have to be static either
-	private JavaFxApplicationLauncher javaFxApplicationLauncher;
-	private static long TIMEOUT = 5000;
-
 	@Before
+	@Override
 	public void setUp() throws Exception {
-		waiter = new Waiter();
-		javaFxApplicationLauncher = new JavaFxApplicationLauncher();
+		super.setUp();
 		BaseFxSupportLifecycleApp.launcher = javaFxApplicationLauncher;
 	}
 
 	@After
+	@Override
 	public void tearDown() throws Exception {
-		waiter = null;
-		javaFxApplicationLauncher = null;
+		super.tearDown();
 		BaseFxSupportLifecycleApp.launcher = null;
 	}
 }

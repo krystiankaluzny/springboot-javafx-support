@@ -13,6 +13,7 @@ import de.felixroske.jfxsupport.FXMLView;
 
 /**
  * Created by Krystian Kałużny on 03.07.2017.
+ * Annotation designed for testing purpose. In normal project using @{@link SpringBootApplication} is enough.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

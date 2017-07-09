@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 
 import de.felixroske.jfxsupport.JavaFxApplication;
-import de.felixroske.jfxsupport.misc.BaseJavaFxSupportTest;
-import de.felixroske.jfxsupport.misc.FxSpringBootApplication;
+import de.felixroske.jfxsupport.util.BaseJavaFxSupportTest;
+import de.felixroske.jfxsupport.util.FxSpringBootApplication;
 import javafx.stage.Stage;
 
 /**
@@ -21,7 +21,7 @@ public class JavaFxSupportLifecycleTest extends BaseJavaFxSupportTest {
 	@Test
 	public void noErrorLifecycleTest() throws Throwable {
 		//given/when
-		javaFxApplicationLauncher.launch(NoErrorLifecycleTestApp.class);
+		javaFxApplicationContainer.launch(NoErrorLifecycleTestApp.class);
 
 		//then
 		waiter.await(TIMEOUT, 5);
@@ -77,7 +77,7 @@ public class JavaFxSupportLifecycleTest extends BaseJavaFxSupportTest {
 	@Test
 	public void initErrorTest() throws Throwable {
 		//given/when
-		javaFxApplicationLauncher.launch(InitErrorTestApp.class);
+		javaFxApplicationContainer.launch(InitErrorTestApp.class);
 
 		//then
 		waiter.await(TIMEOUT, 4);
@@ -124,7 +124,7 @@ public class JavaFxSupportLifecycleTest extends BaseJavaFxSupportTest {
 	@Test
 	public void initAndStartErrorTest() throws Throwable {
 		//given/when
-		javaFxApplicationLauncher.launch(InitAndStartErrorTestApp.class);
+		javaFxApplicationContainer.launch(InitAndStartErrorTestApp.class);
 
 		//then
 		waiter.await(TIMEOUT, 4);
@@ -165,7 +165,7 @@ public class JavaFxSupportLifecycleTest extends BaseJavaFxSupportTest {
 	@Test
 	public void initStartAndStoppedErrorTest() throws Throwable {
 		//given/when
-		javaFxApplicationLauncher.launch(InitStartAndStopErrorTestApp.class);
+		javaFxApplicationContainer.launch(InitStartAndStopErrorTestApp.class);
 
 		//then
 		waiter.await(TIMEOUT, 4);
@@ -198,7 +198,7 @@ public class JavaFxSupportLifecycleTest extends BaseJavaFxSupportTest {
 	@Test
 	public void javaFxApplicationInjectionTest() throws Throwable {
 		//given/when
-		javaFxApplicationLauncher.launch(JavaFxApplicationInjectionTestApp.class);
+		javaFxApplicationContainer.launch(JavaFxApplicationInjectionTestApp.class);
 
 		//then
 		waiter.await(TIMEOUT, 2);
@@ -235,7 +235,7 @@ public class JavaFxSupportLifecycleTest extends BaseJavaFxSupportTest {
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		BaseFxSupportLifecycleApp.launcher = javaFxApplicationLauncher;
+		BaseFxSupportLifecycleApp.launcher = javaFxApplicationContainer;
 	}
 
 	@After

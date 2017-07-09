@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 /**
  * Created by Krystian Kałużny on 24.06.2017.
  */
-public class JavaFxSupport {
+public final class JavaFxSupport {
 
 	static JavaFxApplication application = null;
 
@@ -70,6 +70,14 @@ public class JavaFxSupport {
 	 */
 	public static void setTitle(String title) {
 		setIfNotNull(getStage(), title, Stage::setTitle);
+	}
+
+	public static void showViewOrError(Class<? extends AbstractFxmlView> newView) {
+		application.showViewOrError(newView);
+	}
+
+	public static void showView(Class<? extends AbstractFxmlView> newView) {
+		application.showView(newView);
 	}
 
 	public static StartConfiguration getStartConfiguration() {

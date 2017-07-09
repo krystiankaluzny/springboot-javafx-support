@@ -1,4 +1,4 @@
-package jfxtest.plain;
+package de.felixroske.jfxsupport.view.plain;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,8 +10,11 @@ import javax.annotation.PostConstruct;
 
 import de.felixroske.jfxsupport.AbstractFxmlView;
 import de.roskenet.jfxsupport.test.GuiTest;
+import javafx.scene.control.Button;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.isA;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -29,5 +32,12 @@ public class PlainViewTest extends GuiTest {
 	@Test
 	public void appStartsUp() throws Exception {
 		assertThat(buttonsView, isA(AbstractFxmlView.class));
+	}
+
+	@Test
+	public void bindWithFxmlTest() throws Exception {
+		Button theButton = find("#theButton");
+
+		assertNotNull(theButton);
 	}
 }

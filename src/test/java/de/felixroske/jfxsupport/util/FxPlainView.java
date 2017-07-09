@@ -1,4 +1,4 @@
-package de.felixroske.jfxsupport.misc;
+package de.felixroske.jfxsupport.util;
 
 import de.felixroske.jfxsupport.AbstractFxmlView;
 import de.felixroske.jfxsupport.FXMLView;

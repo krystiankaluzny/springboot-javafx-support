@@ -1,4 +1,4 @@
-package jfxtest.annotated;
+package de.felixroske.jfxsupport.view.annotated;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,7 +36,7 @@ public class AnnotatedViewTest extends GuiTest {
 
 	@Test
 	public void showsI18nText() throws Exception {
-		Button theButton = (Button) find("#theButton");
+		Button theButton = find("#theButton");
 
 		assertThat(theButton.getText(), is("The Button Text"));
 	}

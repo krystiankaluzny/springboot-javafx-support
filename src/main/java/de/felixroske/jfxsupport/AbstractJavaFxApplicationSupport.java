@@ -59,6 +59,14 @@ public abstract class AbstractJavaFxApplicationSupport {
 		}
 	}
 
+	public void showViewOrError(Class<? extends AbstractFxmlView> newView) {
+		javaFxApplication.showViewOrError(newView);
+	}
+
+	public void showView(Class<? extends AbstractFxmlView> newView) {
+		javaFxApplication.showView(newView);
+	}
+
 	/**
 	 * Call after Java Fx onInit and creation spring application context.
 	 * Called on worker thread.

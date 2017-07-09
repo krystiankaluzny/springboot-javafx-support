@@ -9,8 +9,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import de.felixroske.jfxsupport.JavaFxApplication;
-import de.felixroske.jfxsupport.misc.BaseJavaFxSupportTest;
-import de.felixroske.jfxsupport.misc.FxSpringBootApplication;
+import de.felixroske.jfxsupport.util.BaseJavaFxSupportTest;
+import de.felixroske.jfxsupport.util.FxSpringBootApplication;
 import javafx.application.Application;
 
 /**
@@ -21,12 +21,12 @@ public class JavaFxSupportNoLifecycleTest extends BaseJavaFxSupportTest {
 	@Test
 	public void noAbstractJavaFxApplicationSupportTest() throws Throwable {
 		//given
-		javaFxApplicationLauncher.launch(NoAbstractJavaFxApplicationSupportTestApp.class);
+		javaFxApplicationContainer.launch(NoAbstractJavaFxApplicationSupportTestApp.class);
 
 		//when
 		waiter.await(TIMEOUT);
 
-		javaFxApplicationLauncher.close();
+		javaFxApplicationContainer.close();
 
 		//then
 		waiter.await(TIMEOUT);
@@ -38,7 +38,7 @@ public class JavaFxSupportNoLifecycleTest extends BaseJavaFxSupportTest {
 	 */
 
 	@FxSpringBootApplication
-	private static class NoAbstractJavaFxApplicationSupportTestApp {
+	static class NoAbstractJavaFxApplicationSupportTestApp {
 
 		private boolean constructed = false;
 
@@ -58,12 +58,12 @@ public class JavaFxSupportNoLifecycleTest extends BaseJavaFxSupportTest {
 	@Test
 	public void javaFxApplicationInjectionIntoNoLifecycleAppTest() throws Throwable {
 		//given
-		javaFxApplicationLauncher.launch(JavaFxApplicationInjectionIntoNoLifecycleTestApp.class);
+		javaFxApplicationContainer.launch(JavaFxApplicationInjectionIntoNoLifecycleTestApp.class);
 
 		//when
 		waiter.await(TIMEOUT);
 
-		javaFxApplicationLauncher.close();
+		javaFxApplicationContainer.close();
 
 		//then
 		waiter.await(TIMEOUT);
@@ -71,7 +71,7 @@ public class JavaFxSupportNoLifecycleTest extends BaseJavaFxSupportTest {
 
 	/**
 	 * Created by Krystian Kałużny on 03.07.2017.
-	 * Part of {@link #noAbstractJavaFxApplicationSupportTest()}
+	 * Part of {@link #javaFxApplicationInjectionIntoNoLifecycleAppTest()}
 	 */
 
 	@FxSpringBootApplication
@@ -94,12 +94,12 @@ public class JavaFxSupportNoLifecycleTest extends BaseJavaFxSupportTest {
 	@Test
 	public void constructorInjectionIntoNoLifecycleAppTest() throws Throwable {
 		//given
-		javaFxApplicationLauncher.launch(ConstructorInjectionIntoNoLifecycleTestApp.class);
+		javaFxApplicationContainer.launch(ConstructorInjectionIntoNoLifecycleTestApp.class);
 
 		//when
 		waiter.await(TIMEOUT);
 
-		javaFxApplicationLauncher.close();
+		javaFxApplicationContainer.close();
 
 		//then
 		waiter.await(TIMEOUT);
@@ -107,7 +107,7 @@ public class JavaFxSupportNoLifecycleTest extends BaseJavaFxSupportTest {
 
 	/**
 	 * Created by Krystian Kałużny on 03.07.2017.
-	 * Part of {@link #noAbstractJavaFxApplicationSupportTest()}
+	 * Part of {@link #constructorInjectionIntoNoLifecycleAppTest()}
 	 */
 
 	@FxSpringBootApplication
@@ -135,12 +135,12 @@ public class JavaFxSupportNoLifecycleTest extends BaseJavaFxSupportTest {
 	@Test
 	public void injectAsApplicationTest() throws Throwable {
 		//given
-		javaFxApplicationLauncher.launch(InjectAsApplicationTestApp.class);
+		javaFxApplicationContainer.launch(InjectAsApplicationTestApp.class);
 
 		//when
 		waiter.await(TIMEOUT);
 
-		javaFxApplicationLauncher.close();
+		javaFxApplicationContainer.close();
 
 		//then
 		waiter.await(TIMEOUT);
@@ -148,7 +148,7 @@ public class JavaFxSupportNoLifecycleTest extends BaseJavaFxSupportTest {
 
 	/**
 	 * Created by Krystian Kałużny on 03.07.2017.
-	 * Part of {@link #noAbstractJavaFxApplicationSupportTest()}
+	 * Part of {@link #injectAsApplicationTest()}
 	 */
 
 	@FxSpringBootApplication

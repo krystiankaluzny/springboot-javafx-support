@@ -1,14 +1,14 @@
 package de.felixroske.jfxsupport.lifecycle;
 
 import de.felixroske.jfxsupport.AbstractJavaFxApplicationSupport;
-import de.felixroske.jfxsupport.misc.JavaFxApplicationLauncher;
+import de.felixroske.jfxsupport.util.JavaFxApplicationContainer;
 import javafx.stage.Stage;
 
 /**
  * Created by Krystian Kałużny on 03.07.2017.
  */
-abstract class BaseFxSupportLifecycleApp extends AbstractJavaFxApplicationSupport {
-	static JavaFxApplicationLauncher launcher;
+public abstract class BaseFxSupportLifecycleApp extends AbstractJavaFxApplicationSupport {
+	public static JavaFxApplicationContainer launcher;
 	boolean inited = false;
 	boolean started = false;
 	boolean stopped = false;

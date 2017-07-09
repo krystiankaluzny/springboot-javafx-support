@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -11,6 +12,7 @@ import javax.annotation.PreDestroy;
 import de.felixroske.jfxsupport.JavaFxApplication;
 import de.felixroske.jfxsupport.util.BaseJavaFxSupportTest;
 import de.felixroske.jfxsupport.util.FxSpringBootApplication;
+import de.felixroske.jfxsupport.util.OnFxInitialize;
 import javafx.application.Application;
 
 /**
@@ -20,16 +22,11 @@ public class JavaFxSupportNoLifecycleTest extends BaseJavaFxSupportTest {
 
 	@Test
 	public void noAbstractJavaFxApplicationSupportTest() throws Throwable {
-		//given
+		//given/when
 		javaFxApplicationContainer.launch(NoAbstractJavaFxApplicationSupportTestApp.class);
 
-		//when
-		waiter.await(TIMEOUT);
-
-		javaFxApplicationContainer.close();
-
 		//then
-		waiter.await(TIMEOUT);
+		waiter.await(TIMEOUT, 3);
 	}
 
 	/**
@@ -57,16 +54,11 @@ public class JavaFxSupportNoLifecycleTest extends BaseJavaFxSupportTest {
 
 	@Test
 	public void javaFxApplicationInjectionIntoNoLifecycleAppTest() throws Throwable {
-		//given
+		//given/when
 		javaFxApplicationContainer.launch(JavaFxApplicationInjectionIntoNoLifecycleTestApp.class);
 
-		//when
-		waiter.await(TIMEOUT);
-
-		javaFxApplicationContainer.close();
-
 		//then
-		waiter.await(TIMEOUT);
+		waiter.await(TIMEOUT, 3);
 	}
 
 	/**
@@ -93,16 +85,11 @@ public class JavaFxSupportNoLifecycleTest extends BaseJavaFxSupportTest {
 
 	@Test
 	public void constructorInjectionIntoNoLifecycleAppTest() throws Throwable {
-		//given
+		//given/when
 		javaFxApplicationContainer.launch(ConstructorInjectionIntoNoLifecycleTestApp.class);
 
-		//when
-		waiter.await(TIMEOUT);
-
-		javaFxApplicationContainer.close();
-
 		//then
-		waiter.await(TIMEOUT);
+		waiter.await(TIMEOUT, 3);
 	}
 
 	/**
@@ -134,16 +121,11 @@ public class JavaFxSupportNoLifecycleTest extends BaseJavaFxSupportTest {
 
 	@Test
 	public void injectAsApplicationTest() throws Throwable {
-		//given
+		//given/when
 		javaFxApplicationContainer.launch(InjectAsApplicationTestApp.class);
 
-		//when
-		waiter.await(TIMEOUT);
-
-		javaFxApplicationContainer.close();
-
 		//then
-		waiter.await(TIMEOUT);
+		waiter.await(TIMEOUT, 3);
 	}
 
 	/**
@@ -180,6 +162,20 @@ public class JavaFxSupportNoLifecycleTest extends BaseJavaFxSupportTest {
 	//////////////////////////////////
 	/////// TESTS CONFIGURATION //////
 	//////////////////////////////////
+
+	@Component
+	static class CloseOnInitialize implements OnFxInitialize {
+
+		@Override
+		public void onInitialize() {
+			try {
+				waiter.resume();
+				javaFxApplicationContainer.close();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
 
 	@Before
 	@Override

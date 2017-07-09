@@ -15,7 +15,6 @@ class InactiveSpringBootAppExcludeFilter extends ExcludeFilter {
 	public boolean exclude(MetadataReader metadataReader, MetadataReaderFactory metadataReaderFactory) throws IOException {
 		try {
 			if (isAnnotated(metadataReader, SpringBootApplication.class)) {
-
 				return !activeSpringBootClass.getName().equals(metadataReader.getClassMetadata().getClassName());
 			}
 		} catch (ClassNotFoundException e) {

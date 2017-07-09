@@ -86,7 +86,7 @@ public class JavaFxSupport {
 	 * @see StartConfiguration
 	 * @see JavaFxSupport#getStartConfiguration()
 	 */
-	public static void launchApp(final Class<? extends AbstractJavaFxApplicationSupport> appClass,
+	public static void launchApp(final Class<?> appClass,
 	                             final Class<? extends AbstractFxmlView> view, final String[] args) {
 		getStartConfiguration()
 				.setStartClass(appClass)
@@ -104,7 +104,7 @@ public class JavaFxSupport {
 	 * @param splashScreen the splash screen
 	 * @param args         the args
 	 */
-	public static void launchApp(final Class<? extends AbstractJavaFxApplicationSupport> appClass,
+	public static void launchApp(final Class<?> appClass,
 	                             final Class<? extends AbstractFxmlView> view, final SplashScreen splashScreen, final String[] args) {
 		getStartConfiguration()
 				.setStartClass(appClass)

@@ -3,7 +3,6 @@ package de.felixroske.jfxsupport.misc;
 import org.testfx.framework.junit.ApplicationTest;
 
 import de.felixroske.jfxsupport.AbstractFxmlView;
-import de.felixroske.jfxsupport.AbstractJavaFxApplicationSupport;
 import de.felixroske.jfxsupport.JavaFxApplication;
 import de.felixroske.jfxsupport.JavaFxSupport;
 import de.felixroske.jfxsupport.SplashScreen;
@@ -17,12 +16,14 @@ public class JavaFxApplicationLauncher {
 
 	private RunAdapter runAdapter = new RunAdapter();
 	private JavaFxApplication javaFxApplication;
+	private boolean autoClose = false;
+	private boolean closed = false;
 
-	public void launch(Class<? extends AbstractJavaFxApplicationSupport> clazz) throws Exception {
+	public void launch(Class<?> clazz) throws Exception {
 		launch(clazz, FxPlainView.class);
 	}
 
-	public void launch(Class<? extends AbstractJavaFxApplicationSupport> clazz, Class<? extends AbstractFxmlView> viewClazz) throws Exception {
+	public void launch(Class<?> clazz, Class<? extends AbstractFxmlView> viewClazz) throws Exception {
 		InactiveSpringBootAppExcludeFilter.activeSpringBootClass = clazz;
 		JavaFxSupport.getStartConfiguration()
 				.setStartClass(clazz)
@@ -41,6 +42,9 @@ public class JavaFxApplicationLauncher {
 	}
 
 	public void close() throws Exception {
+		if(closed) return;
+
+		closed = true;
 		Platform.runLater(() -> {
 			try {
 				runAdapter.internalAfter();
@@ -49,6 +53,10 @@ public class JavaFxApplicationLauncher {
 			}
 		});
 
+	}
+
+	public void setAutoClose(boolean autoClose) {
+		this.autoClose = autoClose;
 	}
 
 	class RunAdapter extends ApplicationTest {
@@ -60,6 +68,9 @@ public class JavaFxApplicationLauncher {
 		@Override
 		public void start(Stage stage) throws Exception {
 			javaFxApplication.start(stage);
+			if(autoClose) {
+				close();
+			}
 		}
 
 		@Override

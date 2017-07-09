@@ -1,11 +1,6 @@
-package de.felixroske.jfxsupport.misc;
+package de.felixroske.jfxsupport.util;
 
 import net.jodah.concurrentunit.Waiter;
-
-import org.junit.After;
-import org.junit.Before;
-
-import de.felixroske.jfxsupport.misc.JavaFxApplicationLauncher;
 
 /**
  * Created by Krystian Kałużny on 06.07.2017.

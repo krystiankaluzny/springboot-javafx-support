@@ -1,4 +1,4 @@
-package de.felixroske.jfxsupport.misc;
+package de.felixroske.jfxsupport.util;
 
 import org.testfx.framework.junit.ApplicationTest;
 

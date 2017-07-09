@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 
 import de.felixroske.jfxsupport.JavaFxApplication;
-import de.felixroske.jfxsupport.misc.BaseJavaFxSupportTest;
-import de.felixroske.jfxsupport.misc.FxSpringBootApplication;
+import de.felixroske.jfxsupport.util.BaseJavaFxSupportTest;
+import de.felixroske.jfxsupport.util.FxSpringBootApplication;
 import javafx.stage.Stage;
 
 /**

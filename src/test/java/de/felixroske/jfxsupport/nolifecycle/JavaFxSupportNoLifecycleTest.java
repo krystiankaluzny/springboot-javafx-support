@@ -9,8 +9,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import de.felixroske.jfxsupport.JavaFxApplication;
-import de.felixroske.jfxsupport.misc.BaseJavaFxSupportTest;
-import de.felixroske.jfxsupport.misc.FxSpringBootApplication;
+import de.felixroske.jfxsupport.util.BaseJavaFxSupportTest;
+import de.felixroske.jfxsupport.util.FxSpringBootApplication;
 import javafx.application.Application;
 
 /**

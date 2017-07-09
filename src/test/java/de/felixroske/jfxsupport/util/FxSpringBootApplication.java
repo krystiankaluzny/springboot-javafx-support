@@ -3,6 +3,7 @@ package de.felixroske.jfxsupport.util;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.stereotype.Component;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -19,7 +20,7 @@ import de.felixroske.jfxsupport.FXMLView;
 @Retention(RetentionPolicy.RUNTIME)
 @SpringBootApplication
 @ComponentScan(useDefaultFilters = false,
-		includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = FXMLView.class),
+		includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Component.class),
 		excludeFilters = {
 				@ComponentScan.Filter(type = FilterType.CUSTOM, classes = InactiveSpringBootAppExcludeFilter.class),
 				@ComponentScan.Filter(type = FilterType.CUSTOM, classes = InactivePackageExcludeFilter.class)

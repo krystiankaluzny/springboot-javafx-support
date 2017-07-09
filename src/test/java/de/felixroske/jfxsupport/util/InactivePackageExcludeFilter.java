@@ -18,9 +18,14 @@ class InactivePackageExcludeFilter extends ExcludeFilter {
 	boolean exclude(MetadataReader metadataReader, MetadataReaderFactory metadataReaderFactory) throws IOException {
 		try {
 			if (isAnnotated(metadataReader, Component.class)) {
+
 				String currentClassName = metadataReader.getClassMetadata().getClassName();
 				String packageName = activeSpringBootClass.getPackage().getName();
-				return Stream.of(utilPackageName, packageName).noneMatch(currentClassName::startsWith);
+				boolean result = Stream.of(utilPackageName, packageName).noneMatch(currentClassName::startsWith);
+				if(!result) {
+					System.out.println(currentClassName);
+				}
+				return result;
 			}
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);

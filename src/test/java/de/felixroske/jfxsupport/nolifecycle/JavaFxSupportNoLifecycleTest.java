@@ -71,7 +71,7 @@ public class JavaFxSupportNoLifecycleTest extends BaseJavaFxSupportTest {
 
 	/**
 	 * Created by Krystian Kałużny on 03.07.2017.
-	 * Part of {@link #noAbstractJavaFxApplicationSupportTest()}
+	 * Part of {@link #javaFxApplicationInjectionIntoNoLifecycleAppTest()}
 	 */
 
 	@FxSpringBootApplication
@@ -107,7 +107,7 @@ public class JavaFxSupportNoLifecycleTest extends BaseJavaFxSupportTest {
 
 	/**
 	 * Created by Krystian Kałużny on 03.07.2017.
-	 * Part of {@link #noAbstractJavaFxApplicationSupportTest()}
+	 * Part of {@link #constructorInjectionIntoNoLifecycleAppTest()}
 	 */
 
 	@FxSpringBootApplication
@@ -148,7 +148,7 @@ public class JavaFxSupportNoLifecycleTest extends BaseJavaFxSupportTest {
 
 	/**
 	 * Created by Krystian Kałużny on 03.07.2017.
-	 * Part of {@link #noAbstractJavaFxApplicationSupportTest()}
+	 * Part of {@link #injectAsApplicationTest()}
 	 */
 
 	@FxSpringBootApplication

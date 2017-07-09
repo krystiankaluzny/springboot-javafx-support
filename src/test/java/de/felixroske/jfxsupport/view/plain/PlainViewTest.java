@@ -1,4 +1,4 @@
-package jfxtest.plain;
+package de.felixroske.jfxsupport.view.plain;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

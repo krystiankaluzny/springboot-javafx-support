@@ -6,6 +6,7 @@ import de.felixroske.jfxsupport.AbstractFxmlView;
 import de.felixroske.jfxsupport.JavaFxApplication;
 import de.felixroske.jfxsupport.JavaFxSupport;
 import de.felixroske.jfxsupport.SplashScreen;
+import de.roskenet.jfxsupport.test.GuiTest;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
@@ -18,6 +19,10 @@ public class JavaFxApplicationContainer {
 	private JavaFxApplication javaFxApplication;
 	private boolean autoClose = false;
 	private boolean closed = false;
+
+	public JavaFxApplicationContainer() {
+		GuiTest.setHeadlessMode();
+	}
 
 	public void launch(Class<?> clazz) throws Exception {
 		launch(clazz, FxPlainView.class);

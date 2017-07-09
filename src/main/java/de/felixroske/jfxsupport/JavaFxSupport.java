@@ -11,7 +11,8 @@ import javafx.stage.Stage;
 /**
  * Created by Krystian Kałużny on 24.06.2017.
  */
-public final class JavaFxSupport {
+public enum JavaFxSupport {
+	INSATNCE;
 
 	static JavaFxApplication application = null;
 

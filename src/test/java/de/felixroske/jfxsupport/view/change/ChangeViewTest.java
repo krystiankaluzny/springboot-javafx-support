@@ -92,7 +92,6 @@ public class ChangeViewTest extends BaseJavaFxSupportTest {
 		}
 
 		private void setSecondView() {
-			System.out.println("DUPA");
 
 			Button theFirstButton = find("#theFirstButton");
 			Button theSecondButton = find("#theSecondButton");

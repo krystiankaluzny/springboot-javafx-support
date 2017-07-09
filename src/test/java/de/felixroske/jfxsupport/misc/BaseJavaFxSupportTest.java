@@ -11,7 +11,7 @@ import de.felixroske.jfxsupport.misc.JavaFxApplicationLauncher;
  * Created by Krystian Kałużny on 06.07.2017.
  */
 public class BaseJavaFxSupportTest {
-	protected static Waiter waiter; //it have to be static cause classes with @FxSpringBootApplication have to be static either
+	protected static Waiter waiter; //it have to be static because classes with @FxSpringBootApplication have to be static either
 	protected static long TIMEOUT = 5000;
 	protected JavaFxApplicationLauncher javaFxApplicationLauncher;
 

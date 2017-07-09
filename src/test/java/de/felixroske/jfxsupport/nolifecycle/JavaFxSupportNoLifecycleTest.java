@@ -37,7 +37,7 @@ public class JavaFxSupportNoLifecycleTest extends BaseJavaFxSupportTest {
 	 */
 
 	@FxSpringBootApplication
-	static class NoAbstractJavaFxApplicationSupportTestApp {
+	private static class NoAbstractJavaFxApplicationSupportTestApp {
 
 		private boolean constructed = false;
 
@@ -77,6 +77,47 @@ public class JavaFxSupportNoLifecycleTest extends BaseJavaFxSupportTest {
 	static class JavaFxApplicationInjectionIntoNoLifecycleTestApp {
 
 		@Autowired JavaFxApplication javaFxApplication;
+
+		@PostConstruct
+		private void constructed() {
+			waiter.assertNotNull(javaFxApplication);
+			waiter.resume();
+		}
+
+		@PreDestroy
+		private void destroy() {
+			waiter.resume();
+		}
+	}
+
+	@Test
+	public void constructorInjectionIntoNoLifecycleAppTest() throws Throwable {
+		//given
+		javaFxApplicationLauncher.launch(ConstructorInjectionIntoNoLifecycleTestApp.class);
+
+		//when
+		waiter.await(TIMEOUT);
+
+		javaFxApplicationLauncher.close();
+
+		//then
+		waiter.await(TIMEOUT);
+	}
+
+	/**
+	 * Created by Krystian Kałużny on 03.07.2017.
+	 * Part of {@link #noAbstractJavaFxApplicationSupportTest()}
+	 */
+
+	@FxSpringBootApplication
+	static class ConstructorInjectionIntoNoLifecycleTestApp {
+
+		private final JavaFxApplication javaFxApplication;
+
+		@Autowired
+		ConstructorInjectionIntoNoLifecycleTestApp(JavaFxApplication javaFxApplication) {
+			this.javaFxApplication = javaFxApplication;
+		}
 
 		@PostConstruct
 		private void constructed() {

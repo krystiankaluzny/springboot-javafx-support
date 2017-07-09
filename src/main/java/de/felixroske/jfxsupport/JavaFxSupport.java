@@ -72,6 +72,14 @@ public final class JavaFxSupport {
 		setIfNotNull(getStage(), title, Stage::setTitle);
 	}
 
+	public static void showViewOrError(Class<? extends AbstractFxmlView> newView) {
+		application.showViewOrError(newView);
+	}
+
+	public static void showView(Class<? extends AbstractFxmlView> newView) {
+		application.showView(newView);
+	}
+
 	public static StartConfiguration getStartConfiguration() {
 		return JavaFxApplication.startConfiguration;
 	}

@@ -206,7 +206,7 @@ public class JavaFxApplication extends Application {
 	 * @param newView the new view
 	 * @see #showView(Class)
 	 */
-	private void showViewOrError(final Class<? extends AbstractFxmlView> newView) {
+	void showViewOrError(final Class<? extends AbstractFxmlView> newView) {
 		try {
 			showView(newView);
 		} catch (Throwable t) {
@@ -219,7 +219,7 @@ public class JavaFxApplication extends Application {
 	 *
 	 * @param newView the new view
 	 */
-	private void showView(final Class<? extends AbstractFxmlView> newView) {
+	void showView(final Class<? extends AbstractFxmlView> newView) {
 		final AbstractFxmlView view = applicationContext.getBean(newView);
 
 		if (scene == null) {

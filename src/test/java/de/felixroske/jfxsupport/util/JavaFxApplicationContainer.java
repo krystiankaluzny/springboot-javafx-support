@@ -12,9 +12,9 @@ import javafx.stage.Stage;
 /**
  * Created by Krystian Kałużny on 03.07.2017.
  */
-public class JavaFxApplicationLauncher {
+public class JavaFxApplicationContainer {
 
-	private RunAdapter runAdapter = new RunAdapter();
+	private final RunAdapter runAdapter = new RunAdapter();
 	private JavaFxApplication javaFxApplication;
 	private boolean autoClose = false;
 	private boolean closed = false;
@@ -52,11 +52,14 @@ public class JavaFxApplicationLauncher {
 				e.printStackTrace();
 			}
 		});
-
 	}
 
 	public void setAutoClose(boolean autoClose) {
 		this.autoClose = autoClose;
+	}
+
+	public ApplicationTest getApplicationTestEnvironment() {
+		return runAdapter;
 	}
 
 	class RunAdapter extends ApplicationTest {

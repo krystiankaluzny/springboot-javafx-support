@@ -20,7 +20,10 @@ import de.felixroske.jfxsupport.FXMLView;
 @SpringBootApplication
 @ComponentScan(useDefaultFilters = false,
 		includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = FXMLView.class),
-		excludeFilters = @ComponentScan.Filter(type = FilterType.CUSTOM, classes = InactiveSpringBootAppExcludeFilter.class),
-		basePackages = { "de.felixroske.jfxsupport.util" })
+		excludeFilters = {
+				@ComponentScan.Filter(type = FilterType.CUSTOM, classes = InactiveSpringBootAppExcludeFilter.class),
+				@ComponentScan.Filter(type = FilterType.CUSTOM, classes = InactivePackageExcludeFilter.class)
+		},
+		basePackages = { "de.felixroske.jfxsupport" })
 public @interface FxSpringBootApplication {
 }

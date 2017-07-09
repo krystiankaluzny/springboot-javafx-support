@@ -11,6 +11,7 @@ import javax.annotation.PreDestroy;
 import de.felixroske.jfxsupport.JavaFxApplication;
 import de.felixroske.jfxsupport.misc.BaseJavaFxSupportTest;
 import de.felixroske.jfxsupport.misc.FxSpringBootApplication;
+import javafx.application.Application;
 
 /**
  * Created by Krystian Kałużny on 06.07.2017.
@@ -122,6 +123,51 @@ public class JavaFxSupportNoLifecycleTest extends BaseJavaFxSupportTest {
 		@PostConstruct
 		private void constructed() {
 			waiter.assertNotNull(javaFxApplication);
+			waiter.resume();
+		}
+
+		@PreDestroy
+		private void destroy() {
+			waiter.resume();
+		}
+	}
+
+	@Test
+	public void injectAsApplicationTest() throws Throwable {
+		//given
+		javaFxApplicationLauncher.launch(InjectAsApplicationTestApp.class);
+
+		//when
+		waiter.await(TIMEOUT);
+
+		javaFxApplicationLauncher.close();
+
+		//then
+		waiter.await(TIMEOUT);
+	}
+
+	/**
+	 * Created by Krystian Kałużny on 03.07.2017.
+	 * Part of {@link #noAbstractJavaFxApplicationSupportTest()}
+	 */
+
+	@FxSpringBootApplication
+	static class InjectAsApplicationTestApp {
+
+		private final Application application;
+		private final JavaFxApplication javaFxApplication;
+
+		@Autowired
+		InjectAsApplicationTestApp(Application application, JavaFxApplication javaFxApplication) {
+			this.application = application;
+			this.javaFxApplication = javaFxApplication;
+		}
+
+		@PostConstruct
+		private void constructed() {
+			waiter.assertNotNull(application);
+			waiter.assertNotNull(javaFxApplication);
+			waiter.assertEquals(application, javaFxApplication);
 			waiter.resume();
 		}
 

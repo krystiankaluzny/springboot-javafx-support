@@ -30,7 +30,7 @@ import javafx.stage.StageStyle;
 
 public class JavaFxApplication extends Application {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(JavaFxApplication.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JavaFxApplication.class);
 	static StartConfiguration startConfiguration = new StartConfiguration();
 
 	private final BooleanProperty appInitFinished = new SimpleBooleanProperty(false);
@@ -166,6 +166,16 @@ public class JavaFxApplication extends Application {
 		tryToCallAbstractFxSupportOnStart();
 	}
 
+	private void showMainAndCloseSplash(Stage splashStage) {
+		Platform.runLater(() -> {
+			showInitialView();
+			if (startConfiguration.splashScreen.visible()) {
+				splashStage.hide();
+				splashStage.setScene(null);
+			}
+		});
+	}
+
 	private void tryToCallAbstractFxSupportOnStart() {
 		abstractJavaFxApplicationSupport.ifPresent(fxSupport -> Platform.runLater(() -> {
 					try {
@@ -175,16 +185,6 @@ public class JavaFxApplication extends Application {
 					}
 				}
 		));
-	}
-
-	private void showMainAndCloseSplash(Stage splashStage) {
-		Platform.runLater(() -> {
-			showInitialView();
-			if (startConfiguration.splashScreen.visible()) {
-				splashStage.hide();
-				splashStage.setScene(null);
-			}
-		});
 	}
 
 	/**

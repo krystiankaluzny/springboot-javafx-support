@@ -29,7 +29,7 @@ public class JavaFxApplicationContainer {
 	}
 
 	public void launch(Class<?> clazz, Class<? extends AbstractFxmlView> viewClazz) throws Exception {
-		InactiveSpringBootAppExcludeFilter.activeSpringBootClass = clazz;
+		ExcludeFilter.activeSpringBootClass = clazz;
 		JavaFxSupport.getStartConfiguration()
 				.setStartClass(clazz)
 				.setStartView(viewClazz)

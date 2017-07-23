@@ -15,7 +15,7 @@ public abstract class BaseFxSupportLifecycleApp extends AbstractJavaFxApplicatio
 	boolean closed = false;
 
 	protected void exception(String text) {
-		throw new RuntimeException(text);
+		throw new RuntimeException("[Testing exception] " + text);
 	}
 
 	@Override

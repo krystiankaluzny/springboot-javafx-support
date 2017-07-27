@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.awt.SystemTray;
+
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.scene.Scene;
@@ -28,12 +30,10 @@ public abstract class AbstractJavaFxApplicationSupport {
 		return javaFxApplication.getStage();
 	}
 
-	//
 	public Scene getScene() {
 		return javaFxApplication.getScene();
 	}
 
-	//
 	public HostServices getHostServices() {
 		return javaFxApplication.getHostServices();
 	}
@@ -59,6 +59,10 @@ public abstract class AbstractJavaFxApplicationSupport {
 		}
 	}
 
+	public SystemTray getSystemTray() {
+		return javaFxApplication.getSystemTray();
+	}
+
 	public void showViewOrError(Class<? extends AbstractFxmlView> newView) {
 		javaFxApplication.showViewOrError(newView);
 	}
@@ -68,21 +72,33 @@ public abstract class AbstractJavaFxApplicationSupport {
 	}
 
 	/**
-	 * Call after Java Fx onInit and creation spring application context.
+	 * Call after Java Fx init and creation spring application context.
 	 * Called on worker thread.
 	 */
 	protected void onInit() {
 	}
 
 	/**
-	 * Call after Java Fx onStart and full fx support initialization.
+	 * Gets called after full initialization of Spring application context
+	 * and JavaFX platform right before the initial view is shown.
+	 * Override this method as a hook to add special code for your app. Especially meant to
+	 * add AWT code to add a system tray icon and behavior by calling
+	 * GUIState.getSystemTray() and modifying it accordingly.
+	 * Called on FX thread.
+	 */
+	protected void onInitialView() {
+	}
+
+	/**
+	 * Call after Java Fx start and full fx support initialization.
 	 * Called on FX thread.
 	 */
 	protected void onStart(Stage stage) {
 	}
 
 	/**
-	 * Call in Java Fx stop. After that spring application context is onClose.
+	 * Call in Java Fx stop. After that spring application context is close.
+	 *
 	 * @see Application#stop()
 	 */
 	protected void onStop() {
@@ -90,6 +106,7 @@ public abstract class AbstractJavaFxApplicationSupport {
 
 	/**
 	 * Call in Java Fx stop after spring application context close.
+	 *
 	 * @see Application#stop()
 	 */
 	protected void onClose() {

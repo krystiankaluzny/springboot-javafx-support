@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
 
+import java.awt.SystemTray;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +39,7 @@ public class JavaFxApplication extends Application {
 	private List<Image> icons = new ArrayList<>();
 	private Stage stage;
 	private Scene scene;
+	private SystemTray systemTray;
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	private Optional<AbstractJavaFxApplicationSupport> abstractJavaFxApplicationSupport = Optional.empty();
 
@@ -51,6 +53,7 @@ public class JavaFxApplication extends Application {
 		CompletableFuture.runAsync(this::createApplicationContext)
 				.thenRun(this::tryToGetAbstractFxSupport)
 				.thenRun(this::tryToCallAbstractFxSupportOnInit)
+				.thenRun(this::checkSystemTray)
 				.thenRun(this::populateApplicationInstance)
 				.thenRun(this::loadApplicationIcons)
 				.thenRun(this::initApplicationFinished)
@@ -88,6 +91,12 @@ public class JavaFxApplication extends Application {
 			abstractJavaFxApplicationSupport.ifPresent(AbstractJavaFxApplicationSupport::onInit);
 		} catch (Exception e) {
 			LOGGER.error("Exception in onInit method", e);
+		}
+	}
+
+	private void checkSystemTray() {
+		if (SystemTray.isSupported()) {
+			systemTray = SystemTray.getSystemTray();
 		}
 	}
 
@@ -162,18 +171,22 @@ public class JavaFxApplication extends Application {
 	}
 
 	private void afterAppContextInitAndFxStart(Stage splashStage) {
-		showMainAndCloseSplash(splashStage);
+		showInitialAndCloseSplash(splashStage);
 		tryToCallAbstractFxSupportOnStart();
 	}
 
-	private void showMainAndCloseSplash(Stage splashStage) {
+	private void showInitialAndCloseSplash(final Stage splashStage) {
 		Platform.runLater(() -> {
 			showInitialView();
-			if (startConfiguration.splashScreen.visible()) {
-				splashStage.hide();
-				splashStage.setScene(null);
-			}
+			closeSplashScreen(splashStage);
 		});
+	}
+
+	private void closeSplashScreen(final Stage splashStage) {
+		if (startConfiguration.splashScreen.visible()) {
+			splashStage.hide();
+			splashStage.setScene(null);
+		}
 	}
 
 	private void tryToCallAbstractFxSupportOnStart() {
@@ -191,13 +204,26 @@ public class JavaFxApplication extends Application {
 	 * Show initial view.
 	 */
 	private void showInitialView() {
+		setStageStyle();
+		tryToCallAbstractFxSupportOnInitialView();
+		showViewOrError(startConfiguration.startView);
+	}
+
+	private void tryToCallAbstractFxSupportOnInitialView() {
+		try {
+			abstractJavaFxApplicationSupport.ifPresent(AbstractJavaFxApplicationSupport::onInitialView);
+		} catch (Exception e) {
+			LOGGER.error("Exception in onInitialView method", e);
+		}
+	}
+
+	private void setStageStyle() {
 		final String stageStyle = applicationContext.getEnvironment().getProperty("javafx.stage.style");
-		StageStyle style = stageStyle != null ? StageStyle.valueOf(stageStyle.toUpperCase()) : StageStyle.DECORATED;
+		final StageStyle style = stageStyle != null ? StageStyle.valueOf(stageStyle.toUpperCase()) : StageStyle.DECORATED;
 
 		if (!stage.isShowing() && !stage.getStyle().equals(style)) {
 			stage.initStyle(style);
 		}
-		showViewOrError(startConfiguration.startView);
 	}
 
 	/**
@@ -284,6 +310,10 @@ public class JavaFxApplication extends Application {
 
 	Scene getScene() {
 		return scene;
+	}
+
+	SystemTray getSystemTray() {
+		return systemTray;
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package de.felixroske.jfxsupport;
 
+import java.awt.SystemTray;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -71,6 +72,10 @@ public enum JavaFxSupport {
 	 */
 	public static void setTitle(String title) {
 		setIfNotNull(getStage(), title, Stage::setTitle);
+	}
+
+	public static SystemTray getSystemTray() {
+		return getFromAppOrNull(JavaFxApplication::getSystemTray);
 	}
 
 	public static void showViewOrError(Class<? extends AbstractFxmlView> newView) {

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.MissingResourceException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -51,7 +52,8 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 
 	private final ObjectProperty<Object> presenterProperty;
 
-	private final ResourceBundle bundle;
+
+	private final Optional<ResourceBundle> bundle;
 
 	private final URL resource;
 
@@ -151,9 +153,9 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 	 * @return the FXML loader
 	 * @throws IllegalStateException the illegal state exception
 	 */
-	private FXMLLoader loadSynchronously(final URL resource, final ResourceBundle bundle) throws IllegalStateException {
+	private FXMLLoader loadSynchronously(final URL resource, final Optional<ResourceBundle> bundle) throws IllegalStateException {
 
-		final FXMLLoader loader = new FXMLLoader(resource, bundle);
+		final FXMLLoader loader = new FXMLLoader(resource, bundle.orElse(null));
 		loader.setControllerFactory(this::createControllerForType);
 
 		try {
@@ -374,19 +376,23 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 	}
 
 	/**
-	 * Gets the resource bundle or returns null.
+	 * Returns a resource bundle if available
 	 *
 	 * @param name the name of the resource bundle.
 	 * @return the resource bundle
 	 */
-	private ResourceBundle getResourceBundle(final String name) {
+	private Optional<ResourceBundle> getResourceBundle(final String name) {
+	    ResourceBundle bundle;
+
 		try {
 			LOGGER.debug("Resource bundle: " + name);
-			return getBundle(name);
+			bundle = getBundle(name);
 		} catch (final MissingResourceException ex) {
 			LOGGER.debug("No resource bundle could be determined: " + ex.getMessage());
-			return null;
+			bundle = null;
 		}
+		
+		return Optional.ofNullable(bundle);
 	}
 
 	/**
@@ -394,7 +400,7 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 	 *
 	 * @return an existing resource bundle, or null
 	 */
-	public ResourceBundle getResourceBundle() {
+	public Optional<ResourceBundle> getResourceBundle() {
 		return bundle;
 	}
 

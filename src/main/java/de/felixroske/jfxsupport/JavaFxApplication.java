@@ -20,6 +20,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -32,6 +33,7 @@ import javafx.stage.StageStyle;
 public class JavaFxApplication extends Application {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(JavaFxApplication.class);
+
 	static StartConfiguration startConfiguration = new StartConfiguration();
 
 	private final BooleanProperty appInitFinished = new SimpleBooleanProperty(false);
@@ -188,7 +190,7 @@ public class JavaFxApplication extends Application {
 	private void showInitialView() {
 		setStageStyle();
 		tryToCallAbstractFxSupportOnInitialView();
-		showViewOrError(startConfiguration.startView);
+		showMainViewOrError(startConfiguration.startView);
 	}
 
 	private void tryToCallAbstractFxSupportOnInitialView() {
@@ -227,14 +229,14 @@ public class JavaFxApplication extends Application {
 	}
 
 	/**
-	 * Show view. If showView throws any exception, error dialog will show.
+	 * Show main view. If showMainView throws any exception, error dialog will show.
 	 *
 	 * @param newView the new view
-	 * @see #showView(Class)
+	 * @see #showMainView(Class)
 	 */
-	void showViewOrError(final Class<? extends AbstractFxmlView> newView) {
+	void showMainViewOrError(final Class<? extends AbstractFxmlView> newView) {
 		try {
-			showView(newView);
+			showMainView(newView);
 		} catch (Throwable t) {
 			handleShowViewError(t);
 		}
@@ -245,7 +247,7 @@ public class JavaFxApplication extends Application {
 	 *
 	 * @param newView the new view
 	 */
-	void showView(final Class<? extends AbstractFxmlView> newView) {
+	void showMainView(final Class<? extends AbstractFxmlView> newView) throws RuntimeException {
 		final AbstractFxmlView view = applicationContext.getBean(newView);
 
 		if (scene == null) {
@@ -267,6 +269,43 @@ public class JavaFxApplication extends Application {
 		PropertyReaderHelper.setIfPresent(env, "javafx.stage.width", Double.class, stage::setWidth);
 		PropertyReaderHelper.setIfPresent(env, "javafx.stage.height", Double.class, stage::setHeight);
 		PropertyReaderHelper.setIfPresent(env, "javafx.stage.resizable", Boolean.class, stage::setResizable);
+	}
+
+	/**
+	 * Show main view. If showView throws any exception, error dialog will show.
+	 *
+	 * @param viewClass the new window view class.
+	 * @param mode      See {@code javafx.stage.Modality}.
+	 * @see #showView(Class, Modality)
+	 */
+	void showViewOrError(final Class<? extends AbstractFxmlView> viewClass, final Modality mode) {
+		try {
+			showView(viewClass, mode);
+		} catch (Throwable t) {
+			handleShowViewError(t);
+		}
+	}
+
+	/**
+	 * @param viewClass The FxmlView derived class that should be shown.
+	 * @param mode      See {@code javafx.stage.Modality}.
+	 */
+	void showView(final Class<? extends AbstractFxmlView> viewClass, final Modality mode) {
+		final AbstractFxmlView view = applicationContext.getBean(viewClass);
+		Stage newStage = new Stage();
+
+		Scene scene = view.getView().getScene();
+		if (scene == null) {
+			scene = new Scene(view.getView());
+		}
+
+		newStage.setScene(scene);
+		newStage.initModality(mode);
+		newStage.initOwner(getStage());
+		newStage.setTitle(view.getDefaultTitle());
+		newStage.initStyle(view.getDefaultStyle());
+
+		newStage.showAndWait();
 	}
 
 	private void handleShowViewError(Throwable throwable) {

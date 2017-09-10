@@ -46,7 +46,7 @@ public class ChangeViewTest extends BaseJavaFxSupportTest {
 			waiter.assertNotNull(theFirstButton);
 			waiter.assertNull(theSecondButton);
 
-			showView(SecondView.class);
+			showMainView(SecondView.class);
 
 			theFirstButton = find("#theFirstButton");
 			theSecondButton = find("#theSecondButton");
@@ -99,7 +99,7 @@ public class ChangeViewTest extends BaseJavaFxSupportTest {
 			waiter.assertNotNull(theFirstButton);
 			waiter.assertNull(theSecondButton);
 
-			JavaFxSupport.showView(SecondView.class);
+			JavaFxSupport.showMainView(SecondView.class);
 
 			theFirstButton = find("#theFirstButton");
 			theSecondButton = find("#theSecondButton");

@@ -7,6 +7,7 @@ import java.util.function.Function;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -36,7 +37,7 @@ public enum JavaFxSupport {
 	}
 
 	/**
-	 * If source is not null then consume it and given value (eg use a source setter to set value)
+	 * If source is not null then consume it with given value (eg use a source setter to set value)
 	 *
 	 * @param source
 	 * @param value
@@ -78,13 +79,22 @@ public enum JavaFxSupport {
 		return getFromAppOrNull(JavaFxApplication::getSystemTray);
 	}
 
-	public static void showViewOrError(Class<? extends AbstractFxmlView> newView) {
-		application.showViewOrError(newView);
+	public static void showMainViewOrError(Class<? extends AbstractFxmlView> newMainViewClass) {
+		application.showMainViewOrError(newMainViewClass);
 	}
 
-	public static void showView(Class<? extends AbstractFxmlView> newView) {
-		application.showView(newView);
+	public static void showMainView(Class<? extends AbstractFxmlView> newMainViewClass) {
+		application.showMainView(newMainViewClass);
 	}
+
+	public static void showViewOrError(Class<? extends AbstractFxmlView> newViewClass, Modality modality) {
+		application.showViewOrError(newViewClass, modality);
+	}
+
+	public static void showView(Class<? extends AbstractFxmlView> newViewClass, Modality modality) {
+		application.showView(newViewClass, modality);
+	}
+
 
 	public static StartConfiguration getStartConfiguration() {
 		return JavaFxApplication.startConfiguration;

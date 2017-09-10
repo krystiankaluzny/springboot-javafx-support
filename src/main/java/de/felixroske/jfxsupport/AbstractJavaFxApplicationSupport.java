@@ -9,6 +9,7 @@ import java.awt.SystemTray;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -63,12 +64,20 @@ public abstract class AbstractJavaFxApplicationSupport {
 		return javaFxApplication.getSystemTray();
 	}
 
-	public void showViewOrError(Class<? extends AbstractFxmlView> newView) {
-		javaFxApplication.showViewOrError(newView);
+	public void showMainViewOrError(Class<? extends AbstractFxmlView> newMainViewClass) {
+		javaFxApplication.showMainViewOrError(newMainViewClass);
 	}
 
-	public void showView(Class<? extends AbstractFxmlView> newView) {
-		javaFxApplication.showView(newView);
+	public void showMainView(Class<? extends AbstractFxmlView> newMainViewClass) {
+		javaFxApplication.showMainView(newMainViewClass);
+	}
+
+	public void showViewOrError(Class<? extends AbstractFxmlView> newViewClass, Modality modality) {
+		javaFxApplication.showViewOrError(newViewClass, modality);
+	}
+
+	public void showView(Class<? extends AbstractFxmlView> newViewClass, Modality modality) {
+		javaFxApplication.showView(newViewClass, modality);
 	}
 
 	/**
@@ -92,6 +101,8 @@ public abstract class AbstractJavaFxApplicationSupport {
 	/**
 	 * Call after Java Fx start and full fx support initialization.
 	 * Called on FX thread.
+	 *
+	 * @param stage main app stage instance
 	 */
 	protected void onStart(Stage stage) {
 	}

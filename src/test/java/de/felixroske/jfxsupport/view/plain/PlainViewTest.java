@@ -12,7 +12,6 @@ import de.felixroske.jfxsupport.AbstractFxmlView;
 import de.roskenet.jfxsupport.test.GuiTest;
 import javafx.scene.control.Button;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.isA;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;

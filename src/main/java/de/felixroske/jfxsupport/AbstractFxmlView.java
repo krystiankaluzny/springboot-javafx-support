@@ -19,12 +19,12 @@ import java.util.function.Consumer;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.StageStyle;
 
 import static java.util.ResourceBundle.getBundle;
 
@@ -224,11 +224,7 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 		return children.listIterator().next();
 	}
 
-	/**
-	 * Adds the CSS if available.
-	 *
-	 * @param parent the parent
-	 */
+
 	void addCSSIfAvailable(final Parent parent) {
 
 		// Read global css when available:
@@ -237,7 +233,7 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 			list.forEach(css -> parent.getStylesheets().add(getClass().getResource(css).toExternalForm()));
 		}
 
-		addCSSFromAnnotation(parent, annotation);
+		addCSSFromAnnotation(parent);
 
 		final URL uri = getClass().getResource(getStyleSheetName());
 		if (uri == null) {
@@ -248,13 +244,7 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 		parent.getStylesheets().add(uriToCss);
 	}
 
-	/**
-	 * Adds the CSS from annotation to parent.
-	 *
-	 * @param parent     the parent
-	 * @param annotation the annotation
-	 */
-	private void addCSSFromAnnotation(final Parent parent, final FXMLView annotation) {
+	private void addCSSFromAnnotation(final Parent parent) {
 		if (annotation != null && annotation.css().length > 0) {
 			for (final String cssFile : annotation.css()) {
 				final URL uri = getClass().getResource(cssFile);
@@ -270,10 +260,19 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 	}
 
 	/**
-	 * Gets the style sheet name.
-	 *
-	 * @return the style sheet name
+	 * Gets the default title for to be shown in a (un)modal window.
 	 */
+	String getDefaultTitle() {
+		return annotation.title();
+	}
+
+	/**
+	 * Gets the default style for a (un)modal window.
+	 */
+	StageStyle getDefaultStyle() {
+		return annotation.stageStyle();
+	}
+
 	private String getStyleSheetName() {
 		return fxmlRoot + getConventionalName(".css");
 	}
@@ -303,10 +302,7 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 	 */
 	public void getPresenter(final Consumer<Object> presenterConsumer) {
 
-		presenterProperty.addListener(
-				(final ObservableValue<? extends Object> o, final Object oldValue, final Object newValue) -> {
-					presenterConsumer.accept(newValue);
-				});
+		presenterProperty.addListener((o, oldValue, newValue) -> presenterConsumer.accept(newValue));
 	}
 
 	/**
@@ -382,7 +378,7 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 	 * @return the resource bundle
 	 */
 	private Optional<ResourceBundle> getResourceBundle(final String name) {
-	    ResourceBundle bundle;
+		ResourceBundle bundle;
 
 		try {
 			LOGGER.debug("Resource bundle: " + name);
@@ -391,7 +387,7 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 			LOGGER.debug("No resource bundle could be determined: " + ex.getMessage());
 			bundle = null;
 		}
-		
+
 		return Optional.ofNullable(bundle);
 	}
 

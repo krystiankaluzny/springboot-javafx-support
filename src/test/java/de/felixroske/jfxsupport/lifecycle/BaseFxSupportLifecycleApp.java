@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 public abstract class BaseFxSupportLifecycleApp extends AbstractJavaFxApplicationSupport {
 	public static JavaFxApplicationContainer launcher;
 	boolean inited = false;
+	boolean initedView = false;
 	boolean started = false;
 	boolean stopped = false;
 	boolean closed = false;
@@ -28,20 +29,30 @@ public abstract class BaseFxSupportLifecycleApp extends AbstractJavaFxApplicatio
 	}
 
 	@Override
+	protected void onInitialView() {
+		initedView();
+	}
+
+
+	protected void initedView() {
+		initedView = true;
+	}
+
+	@Override
 	protected void onStart(Stage stage) {
 		started(stage);
 	}
 
 	protected void started(Stage stage) {
 		started();
-		closeAfterHide(stage);
+		hideAndClose(stage);
 	}
 
 	protected void started() {
 		started = true;
 	}
 
-	protected void closeAfterHide(Stage stage) {
+	protected void hideAndClose(Stage stage) {
 		stage.hide();
 		try {
 			launcher.close();

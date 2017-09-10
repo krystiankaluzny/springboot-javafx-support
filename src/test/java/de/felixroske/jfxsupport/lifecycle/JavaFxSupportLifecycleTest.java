@@ -24,7 +24,7 @@ public class JavaFxSupportLifecycleTest extends BaseJavaFxSupportTest {
 		javaFxApplicationContainer.launch(NoErrorLifecycleTestApp.class);
 
 		//then
-		waiter.await(TIMEOUT, 5);
+		waiter.await(TIMEOUT, 6);
 	}
 
 	/**
@@ -51,8 +51,15 @@ public class JavaFxSupportLifecycleTest extends BaseJavaFxSupportTest {
 		}
 
 		@Override
-		protected void onStart(Stage stage) {
+		protected void onInitialView() {
 			waiter.assertTrue(inited);
+			waiter.resume();
+			initedView();
+		}
+
+		@Override
+		protected void onStart(Stage stage) {
+			waiter.assertTrue(initedView);
 			waiter.resume();
 			started(stage);
 		}
@@ -80,7 +87,7 @@ public class JavaFxSupportLifecycleTest extends BaseJavaFxSupportTest {
 		javaFxApplicationContainer.launch(InitErrorTestApp.class);
 
 		//then
-		waiter.await(TIMEOUT, 4);
+		waiter.await(TIMEOUT, 5);
 	}
 
 	/**
@@ -98,8 +105,15 @@ public class JavaFxSupportLifecycleTest extends BaseJavaFxSupportTest {
 		}
 
 		@Override
-		protected void onStart(Stage stage) {
+		protected void onInitialView() {
 			waiter.assertFalse(inited);
+			waiter.resume();
+			initedView();
+		}
+
+		@Override
+		protected void onStart(Stage stage) {
+			waiter.assertTrue(initedView);
 			waiter.resume();
 			started(stage);
 		}
@@ -122,26 +136,73 @@ public class JavaFxSupportLifecycleTest extends BaseJavaFxSupportTest {
 	}
 
 	@Test
-	public void initAndStartErrorTest() throws Throwable {
+	public void initAndInitialViewErrorTest() throws Throwable {
 		//given/when
-		javaFxApplicationContainer.launch(InitAndStartErrorTestApp.class);
+		javaFxApplicationContainer.launch(InitAndInitialViewErrorTestApp.class);
 
 		//then
-		waiter.await(TIMEOUT, 4);
+		waiter.await(TIMEOUT, 5);
 	}
 
 	/**
 	 * Created by Krystian Kałużny on 03.07.2017.
-	 * Part of {@link #initAndStartErrorTest()}
+	 * Part of {@link #initAndInitialViewErrorTest()}
 	 */
 	@FxSpringBootApplication
-	static class InitAndStartErrorTestApp extends InitErrorTestApp {
+	static class InitAndInitialViewErrorTestApp extends InitErrorTestApp {
+
+		@Override
+		protected void onInitialView() {
+			waiter.assertFalse(inited);
+			waiter.resume();
+			exception("Initial View error");
+			initedView();
+		}
 
 		@Override
 		protected void onStart(Stage stage) {
-			waiter.assertFalse(inited);
+			waiter.assertFalse(initedView);
 			waiter.resume();
-			closeAfterHide(stage);
+			started(stage);
+		}
+
+		@Override
+		protected void onStop() {
+			waiter.assertTrue(started);
+			waiter.resume();
+			stopped();
+		}
+
+		@Override
+		protected void onClose() {
+			waiter.assertTrue(stopped);
+			closed();
+
+			waiter.resume();
+		}
+	}
+
+	@Test
+	public void initInitialViewAndStartErrorTest() throws Throwable {
+		//given/when
+		javaFxApplicationContainer.launch(InitInitialViewAndStartErrorTestApp.class);
+
+		//then
+		waiter.await(TIMEOUT, 5);
+	}
+
+	/**
+	 * Created by Krystian Kałużny on 03.07.2017.
+	 * Part of {@link #initInitialViewAndStartErrorTest()}
+	 */
+	@FxSpringBootApplication
+	static class InitInitialViewAndStartErrorTestApp extends InitAndInitialViewErrorTestApp {
+
+		@Override
+		protected void onStart(Stage stage) {
+			waiter.assertFalse(initedView);
+			waiter.resume();
+			hideAndClose(stage);
 			exception("Start error");
 			started();
 		}
@@ -163,20 +224,20 @@ public class JavaFxSupportLifecycleTest extends BaseJavaFxSupportTest {
 	}
 
 	@Test
-	public void initStartAndStoppedErrorTest() throws Throwable {
+	public void initInitialViewStartAndStopErrorTest() throws Throwable {
 		//given/when
-		javaFxApplicationContainer.launch(InitStartAndStopErrorTestApp.class);
+		javaFxApplicationContainer.launch(InitInitialViewStartAndStopErrorTestApp.class);
 
 		//then
-		waiter.await(TIMEOUT, 4);
+		waiter.await(TIMEOUT, 5);
 	}
 
 	/**
 	 * Created by Krystian Kałużny on 03.07.2017.
-	 * Part of {@link #initStartAndStoppedErrorTest()}
+	 * Part of {@link #initInitialViewStartAndStopErrorTest()}
 	 */
 	@FxSpringBootApplication
-	static class InitStartAndStopErrorTestApp extends InitAndStartErrorTestApp {
+	static class InitInitialViewStartAndStopErrorTestApp extends InitInitialViewAndStartErrorTestApp {
 
 		@Override
 		protected void onStop() {

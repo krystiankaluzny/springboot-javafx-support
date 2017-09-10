@@ -182,24 +182,6 @@ public class JavaFxApplication extends Application {
 		});
 	}
 
-	private void closeSplashScreen(final Stage splashStage) {
-		if (startConfiguration.splashScreen.visible()) {
-			splashStage.hide();
-			splashStage.setScene(null);
-		}
-	}
-
-	private void tryToCallAbstractFxSupportOnStart() {
-		abstractJavaFxApplicationSupport.ifPresent(fxSupport -> Platform.runLater(() -> {
-					try {
-						fxSupport.onStart(stage);
-					} catch (Exception e) {
-						LOGGER.error("Exception in onStart method", e);
-					}
-				}
-		));
-	}
-
 	/**
 	 * Show initial view.
 	 */
@@ -224,6 +206,24 @@ public class JavaFxApplication extends Application {
 		if (!stage.isShowing() && !stage.getStyle().equals(style)) {
 			stage.initStyle(style);
 		}
+	}
+
+	private void closeSplashScreen(final Stage splashStage) {
+		if (startConfiguration.splashScreen.visible()) {
+			splashStage.hide();
+			splashStage.setScene(null);
+		}
+	}
+
+	private void tryToCallAbstractFxSupportOnStart() {
+		abstractJavaFxApplicationSupport.ifPresent(fxSupport -> Platform.runLater(() -> {
+					try {
+						fxSupport.onStart(stage);
+					} catch (Exception e) {
+						LOGGER.error("Exception in onStart method", e);
+					}
+				}
+		));
 	}
 
 	/**

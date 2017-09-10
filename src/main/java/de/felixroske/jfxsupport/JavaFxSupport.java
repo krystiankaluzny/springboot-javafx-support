@@ -119,22 +119,4 @@ public enum JavaFxSupport {
 
 		Application.launch(JavaFxApplication.class, args);
 	}
-
-	/**
-	 * Launch app. This method is blocked as long as Java FX thread is working.
-	 *
-	 * @param appClass     the app class
-	 * @param view         the view
-	 * @param splashScreen the splash screen
-	 * @param args         the args
-	 */
-	public static void launchApp(final Class<?> appClass,
-	                             final Class<? extends AbstractFxmlView> view, final SplashScreen splashScreen, final String[] args) {
-		getStartConfiguration()
-				.setStartClass(appClass)
-				.setStartView(view)
-				.setStartArgs(args);
-
-		Application.launch(JavaFxApplication.class, args);
-	}
 }

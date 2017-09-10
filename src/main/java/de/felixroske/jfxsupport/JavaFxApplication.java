@@ -359,11 +359,6 @@ public class JavaFxApplication extends Application {
 		return systemTray;
 	}
 
-	/**
-	 * Created by Krystian Kałużny on 25.06.2017.
-	 * <p>
-	 * Using static field allows to create Spring Bean from Java FX Application instance.
-	 */
 	static class JavaFxApplicationInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
 		final JavaFxApplication javaFxApplication;

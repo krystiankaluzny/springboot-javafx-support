@@ -57,7 +57,7 @@ public class JavaFxApplication extends Application {
 				.thenRun(this::tryToCallAbstractFxSupportOnInit)
 				.thenRun(this::checkSystemTray)
 				.thenRun(this::populateApplicationInstance)
-				.thenRun(this::loadApplicationIcons)
+				.thenRun(this::tryToLoadApplicationIcons)
 				.thenRun(this::initApplicationFinished)
 				.exceptionally(throwable -> {
 					handleAppInitError(throwable);
@@ -106,17 +106,21 @@ public class JavaFxApplication extends Application {
 		JavaFxSupport.application = this;
 	}
 
-	private void loadApplicationIcons() {
-		final List<String> fsImages = PropertyReaderHelper.get(applicationContext.getEnvironment(), "javafx.appicons");
+	private void tryToLoadApplicationIcons() {
+		try {
+			final List<String> fsImages = PropertyReaderHelper.get(applicationContext.getEnvironment(), "javafx.appicons");
 
-		if (!fsImages.isEmpty()) {
-			fsImages.forEach((s) -> icons.add(new Image(getClass().getResource(s).toExternalForm())));
-		} else { // add factory images
-			icons.add(new Image(getClass().getResource("/icons/gear_16x16.png").toExternalForm()));
-			icons.add(new Image(getClass().getResource("/icons/gear_24x24.png").toExternalForm()));
-			icons.add(new Image(getClass().getResource("/icons/gear_36x36.png").toExternalForm()));
-			icons.add(new Image(getClass().getResource("/icons/gear_42x42.png").toExternalForm()));
-			icons.add(new Image(getClass().getResource("/icons/gear_64x64.png").toExternalForm()));
+			if (!fsImages.isEmpty()) {
+				fsImages.forEach((s) -> icons.add(new Image(getClass().getResource(s).toExternalForm())));
+			} else { // add factory images
+				icons.add(new Image(getClass().getResource("/icons/gear_16x16.png").toExternalForm()));
+				icons.add(new Image(getClass().getResource("/icons/gear_24x24.png").toExternalForm()));
+				icons.add(new Image(getClass().getResource("/icons/gear_36x36.png").toExternalForm()));
+				icons.add(new Image(getClass().getResource("/icons/gear_42x42.png").toExternalForm()));
+				icons.add(new Image(getClass().getResource("/icons/gear_64x64.png").toExternalForm()));
+			}
+		} catch (Exception e) {
+			LOGGER.error("Failed to load icons: ", e);
 		}
 	}
 
